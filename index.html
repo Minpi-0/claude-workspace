@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>口袋基金｜1,000 元解鎖無限配置</title>
+<meta name="description" content="1,000 元起，千檔基金自由配、一鍵打包結帳。你的投資美食街，別家選不到的，這裡一次買齊。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0B2B3C;
+  --teal:#0FA37F;
+  --teal-dark:#0A7F63;
+  --accent:#FF6F3C;
+  --accent-dark:#E85A29;
+  --bg:#F6F8F7;
+  --card:#FFFFFF;
+  --text:#132622;
+  --muted:#5C716B;
+  --line:#E4EAE7;
+  --radius:16px;
+  --shadow:0 8px 24px rgba(11,43,60,0.08);
+  --shadow-lg:0 16px 40px rgba(11,43,60,0.14);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Noto Sans TC','PingFang TC','Microsoft JhengHei',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
+  padding-bottom:76px;
+}
+img{max-width:100%;display:block;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;}
+.container{max-width:1120px;margin:0 auto;padding:0 20px;}
+.section{padding:72px 0;}
+.section-head{text-align:center;max-width:640px;margin:0 auto 40px;}
+.eyebrow{
+  display:inline-block;color:var(--teal-dark);font-weight:700;font-size:13px;
+  letter-spacing:.08em;background:rgba(15,163,127,0.1);padding:6px 14px;border-radius:999px;margin-bottom:14px;
+}
+.section-title{font-size:clamp(24px,4vw,34px);font-weight:900;color:var(--navy);}
+.section-sub{color:var(--muted);margin-top:10px;font-size:15px;}
+
+/* header */
+header{
+  position:sticky;top:0;z-index:60;background:rgba(246,248,247,0.92);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;max-width:1120px;margin:0 auto;}
+.logo{display:flex;align-items:center;gap:8px;font-weight:900;font-size:19px;color:var(--navy);}
+.logo-mark{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--teal),var(--teal-dark));display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:900;}
+.nav-links{display:flex;gap:28px;font-size:14px;font-weight:500;color:var(--navy);}
+.nav-links a:hover{color:var(--teal-dark);}
+.nav-right{display:flex;align-items:center;gap:14px;}
+.cart-chip{
+  position:relative;width:40px;height:40px;border-radius:50%;background:var(--card);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+}
+.cart-badge{
+  position:absolute;top:-4px;right:-4px;background:var(--accent);color:#fff;font-size:11px;font-weight:700;
+  min-width:18px;height:18px;border-radius:999px;display:flex;align-items:center;justify-content:center;padding:0 4px;
+  transform:scale(0);transition:transform .25s cubic-bezier(.34,1.56,.64,1);
+}
+.cart-badge.show{transform:scale(1);}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:11px 22px;border-radius:999px;
+  font-weight:700;font-size:14px;transition:transform .15s ease,box-shadow .15s ease;white-space:nowrap;
+}
+.btn:active{transform:scale(0.96);}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:0 6px 16px rgba(255,111,60,0.35);}
+.btn-primary:hover{background:var(--accent-dark);}
+.btn-ghost{background:var(--card);color:var(--navy);border:1.5px solid var(--line);}
+.btn-ghost:hover{border-color:var(--teal);color:var(--teal-dark);}
+.btn-outline-light{background:rgba(255,255,255,0.12);color:#fff;border:1.5px solid rgba(255,255,255,0.5);}
+.btn-outline-light:hover{background:rgba(255,255,255,0.22);}
+.btn-sm{padding:8px 16px;font-size:13px;}
+@media (max-width:860px){.nav-links{display:none;}}
+
+/* hero */
+.hero{
+  position:relative;overflow:hidden;background:radial-gradient(1100px 500px at 80% -10%,#123B4F 0%,var(--navy) 55%,#081C28 100%);
+  color:#fff;padding:88px 0 100px;
+}
+.hero-inner{display:grid;grid-template-columns:1.1fr 0.9fr;gap:40px;align-items:center;}
+@media (max-width:900px){.hero-inner{grid-template-columns:1fr;text-align:center;}}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:6px;background:rgba(15,163,127,0.18);border:1px solid rgba(15,163,127,0.4);
+  color:#7FE3C4;padding:6px 14px;border-radius:999px;font-size:13px;font-weight:700;margin-bottom:20px;
+}
+.hero h1{font-size:clamp(30px,5vw,50px);font-weight:900;line-height:1.25;}
+.hero h1 .hl{color:#7FE3C4;}
+.hero p{margin-top:18px;font-size:17px;color:#C7D6D2;max-width:480px;}
+@media (max-width:900px){.hero p{margin-left:auto;margin-right:auto;}}
+.hero-cta{display:flex;gap:14px;margin-top:32px;flex-wrap:wrap;}
+@media (max-width:900px){.hero-cta{justify-content:center;}}
+.hero-trust{display:flex;gap:22px;margin-top:36px;flex-wrap:wrap;color:#9FB3AE;font-size:13px;}
+@media (max-width:900px){.hero-trust{justify-content:center;}}
+.hero-trust span{display:flex;align-items:center;gap:6px;}
+
+.hero-visual{position:relative;height:320px;}
+@media (max-width:900px){.hero-visual{height:260px;}}
+.drop-card{
+  position:absolute;left:50%;width:130px;padding:14px;border-radius:14px;background:#fff;color:var(--navy);
+  box-shadow:var(--shadow-lg);text-align:center;animation:dropfall 3.6s ease-in-out infinite;
+}
+.drop-card .amt{font-size:20px;font-weight:900;color:var(--teal-dark);}
+.drop-card .lbl{font-size:11px;color:var(--muted);margin-top:2px;}
+.drop-card:nth-child(1){top:0;transform:translateX(-190px) rotate(-8deg);animation-delay:0s;}
+.drop-card:nth-child(2){top:0;transform:translateX(-65px) rotate(3deg);animation-delay:.5s;}
+.drop-card:nth-child(3){top:0;transform:translateX(60px) rotate(-4deg);animation-delay:1s;}
+@keyframes dropfall{
+  0%{opacity:0;top:-20px;}
+  12%{opacity:1;}
+  55%{top:190px;}
+  62%{top:178px;}
+  70%{top:190px;}
+  85%{opacity:1;}
+  100%{opacity:0;top:190px;}
+}
+.cart-well{
+  position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:220px;height:110px;
+  background:linear-gradient(180deg,rgba(15,163,127,0.25),rgba(15,163,127,0.05));
+  border:2px dashed rgba(127,227,196,0.5);border-radius:20px 20px 8px 8px;display:flex;align-items:flex-end;justify-content:center;
+  font-size:40px;padding-bottom:8px;
+}
+
+/* compare section */
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+@media (max-width:760px){.compare-grid{grid-template-columns:1fr;}}
+.compare-card{background:var(--card);border-radius:var(--radius);padding:30px;box-shadow:var(--shadow);border:1px solid var(--line);}
+.compare-card.win{border:2px solid var(--teal);position:relative;box-shadow:var(--shadow-lg);}
+.compare-card.win::before{
+  content:"推薦選擇";position:absolute;top:-14px;left:24px;background:var(--teal);color:#fff;font-size:12px;font-weight:700;
+  padding:4px 14px;border-radius:999px;
+}
+.compare-card h3{font-size:18px;font-weight:900;color:var(--navy);margin-bottom:18px;}
+.compare-card.win h3{color:var(--teal-dark);}
+.compare-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);font-size:14px;}
+.compare-row:last-child{border-bottom:none;}
+.compare-row .k{color:var(--muted);}
+.compare-row .v{font-weight:700;}
+.compare-card:not(.win) .v{color:var(--muted);}
+.compare-card.win .v{color:var(--teal-dark);}
+
+/* combos */
+.combo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+@media (max-width:960px){.combo-grid{grid-template-columns:1fr;}}
+.combo-card{
+  background:var(--card);border-radius:var(--radius);padding:26px;box-shadow:var(--shadow);border:1px solid var(--line);
+  display:flex;flex-direction:column;transition:transform .2s ease,box-shadow .2s ease;
+}
+.combo-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);}
+.combo-tag{display:inline-block;font-size:12px;font-weight:700;color:var(--teal-dark);background:rgba(15,163,127,0.1);padding:4px 12px;border-radius:999px;align-self:flex-start;margin-bottom:12px;}
+.combo-card h3{font-size:20px;font-weight:900;color:var(--navy);}
+.combo-price{margin-top:6px;color:var(--muted);font-size:13px;}
+.combo-price b{color:var(--accent-dark);font-size:16px;}
+.combo-list{margin-top:16px;display:flex;flex-direction:column;gap:10px;flex:1;}
+.combo-item{display:flex;gap:10px;font-size:13px;padding:10px 12px;background:var(--bg);border-radius:10px;}
+.combo-item .dot{width:6px;height:6px;border-radius:50%;background:var(--teal);margin-top:7px;flex-shrink:0;}
+.combo-item b{display:block;color:var(--navy);font-size:13.5px;}
+.combo-item span{color:var(--muted);font-size:12.5px;}
+.combo-copy{margin-top:16px;font-size:13px;color:var(--muted);background:rgba(255,111,60,0.06);border-left:3px solid var(--accent);padding:10px 12px;border-radius:0 8px 8px 0;}
+.combo-card .btn{margin-top:20px;width:100%;}
+
+/* calculator */
+.calc-wrap{background:var(--card);border-radius:20px;box-shadow:var(--shadow-lg);border:1px solid var(--line);padding:36px;display:grid;grid-template-columns:1fr 1fr;gap:40px;}
+@media (max-width:860px){.calc-wrap{grid-template-columns:1fr;padding:24px;}}
+.calc-label{font-weight:700;color:var(--navy);margin-bottom:6px;font-size:15px;}
+.calc-value{font-size:34px;font-weight:900;color:var(--teal-dark);}
+.calc-value span{font-size:15px;color:var(--muted);font-weight:500;}
+input[type=range]{
+  width:100%;margin-top:22px;-webkit-appearance:none;height:8px;border-radius:999px;background:var(--line);outline:none;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:var(--teal);border:4px solid #fff;
+  box-shadow:0 2px 8px rgba(0,0,0,0.25);cursor:pointer;
+}
+input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:var(--teal);border:4px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.25);cursor:pointer;}
+.calc-scale{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:8px;}
+.calc-note{margin-top:20px;font-size:13px;color:var(--muted);background:var(--bg);padding:14px 16px;border-radius:12px;}
+.calc-chart{display:flex;flex-direction:column;justify-content:center;gap:18px;}
+.bar-row{display:flex;align-items:center;gap:12px;}
+.bar-label{width:100px;font-size:13px;color:var(--navy);font-weight:700;flex-shrink:0;}
+.bar-track{flex:1;height:16px;background:var(--bg);border-radius:999px;overflow:hidden;border:1px solid var(--line);}
+.bar-fill{height:100%;border-radius:999px;transition:width .35s ease;}
+.bar-fill.risk{background:linear-gradient(90deg,#FF9466,var(--accent));}
+.bar-fill.stable{background:linear-gradient(90deg,#5FD9B4,var(--teal-dark));}
+.bar-val{width:50px;text-align:right;font-size:13px;font-weight:700;color:var(--muted);flex-shrink:0;}
+
+/* treasure */
+.tag-filter{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:32px;}
+.tag-btn{
+  padding:9px 18px;border-radius:999px;border:1.5px solid var(--line);background:var(--card);font-size:13px;font-weight:600;
+  color:var(--navy);transition:all .15s ease;
+}
+.tag-btn:hover{border-color:var(--teal);}
+.tag-btn.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+.fund-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+@media (max-width:960px){.fund-grid{grid-template-columns:repeat(2,1fr);}}
+@media (max-width:620px){.fund-grid{grid-template-columns:1fr;}}
+.fund-card{background:var(--card);border-radius:14px;padding:20px;border:1px solid var(--line);box-shadow:var(--shadow);transition:transform .2s ease;}
+.fund-card:hover{transform:translateY(-3px);}
+.fund-tag{font-size:11px;font-weight:700;color:var(--teal-dark);background:rgba(15,163,127,0.1);padding:3px 10px;border-radius:999px;display:inline-block;}
+.fund-name{margin-top:12px;font-size:15px;font-weight:700;color:var(--navy);}
+.fund-meta{display:flex;justify-content:space-between;align-items:center;margin-top:14px;}
+.fund-return{font-size:13px;color:var(--muted);}
+.fund-return b{color:#E0432F;font-size:16px;}
+.fund-return.neg b{color:#2E9E6B;}
+.add-btn{
+  width:32px;height:32px;border-radius:50%;background:var(--navy);color:#fff;font-size:18px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;transition:transform .15s ease,background .15s ease;
+}
+.add-btn:hover{background:var(--teal-dark);}
+.add-btn:active{transform:scale(0.85);}
+.fund-price{margin-top:10px;font-size:12px;color:var(--muted);}
+
+/* steps */
+.steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+@media (max-width:860px){.steps-grid{grid-template-columns:repeat(2,1fr);}}
+@media (max-width:480px){.steps-grid{grid-template-columns:1fr;}}
+.step-card{background:var(--card);border-radius:16px;padding:26px 20px;text-align:center;border:1px solid var(--line);box-shadow:var(--shadow);position:relative;}
+.step-num{
+  width:38px;height:38px;border-radius:50%;background:var(--teal);color:#fff;font-weight:900;display:flex;
+  align-items:center;justify-content:center;margin:0 auto 14px;font-size:16px;
+}
+.step-card h4{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:6px;}
+.step-card p{font-size:12.5px;color:var(--muted);}
+.trust-badges{display:flex;justify-content:center;gap:14px;margin-top:36px;flex-wrap:wrap;}
+.badge-pill{
+  display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);padding:10px 18px;
+  border-radius:999px;font-size:13px;font-weight:700;color:var(--navy);
+}
+
+/* faq */
+.faq-list{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:12px;}
+.faq-item{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;}
+.faq-q{width:100%;text-align:left;padding:18px 22px;display:flex;justify-content:space-between;align-items:center;font-weight:700;color:var(--navy);font-size:14.5px;}
+.faq-q .plus{transition:transform .25s ease;color:var(--teal-dark);font-size:20px;flex-shrink:0;margin-left:12px;}
+.faq-item.open .faq-q .plus{transform:rotate(45deg);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease;}
+.faq-a p{padding:0 22px 18px;font-size:13.5px;color:var(--muted);}
+
+.cta-banner{
+  margin-top:56px;background:linear-gradient(120deg,var(--teal-dark),var(--navy));border-radius:24px;padding:48px;
+  text-align:center;color:#fff;box-shadow:var(--shadow-lg);
+}
+.cta-banner h3{font-size:clamp(22px,3.5vw,30px);font-weight:900;}
+.cta-banner p{color:#CFE8DF;margin-top:10px;font-size:14.5px;}
+.cta-banner .btn-primary{margin-top:24px;padding:14px 32px;font-size:15px;}
+
+footer{padding:36px 0;text-align:center;color:var(--muted);font-size:12.5px;border-top:1px solid var(--line);background:var(--card);}
+footer p{margin-top:6px;}
+
+/* sticky cart bar */
+.cart-bar{
+  position:fixed;left:0;right:0;bottom:0;z-index:70;background:var(--navy);color:#fff;
+  box-shadow:0 -8px 24px rgba(0,0,0,0.2);transform:translateY(100%);transition:transform .3s cubic-bezier(.34,1.2,.64,1);
+}
+.cart-bar.show{transform:translateY(0);}
+.cart-bar-inner{max-width:1120px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+.cart-bar-info{font-size:13.5px;color:#C7D6D2;}
+.cart-bar-info b{color:#fff;font-size:15px;}
+.cart-bar-info .sep{margin:0 8px;color:#4A6470;}
+
+.fly-card{
+  position:fixed;z-index:80;background:#fff;color:var(--navy);font-size:12px;font-weight:700;padding:6px 10px;
+  border-radius:8px;box-shadow:var(--shadow-lg);pointer-events:none;transition:all .6s cubic-bezier(.5,-0.3,.7,1);
+}
+.toast{
+  position:fixed;bottom:96px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;
+  padding:10px 20px;border-radius:999px;font-size:13px;font-weight:600;opacity:0;transition:all .3s ease;z-index:90;pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="logo"><span class="logo-mark">口</span>口袋基金</div>
+    <nav class="nav-links">
+      <a href="#combos">熱門套餐</a>
+      <a href="#calc">DIY 試算</a>
+      <a href="#treasure">尋寶庫</a>
+      <a href="#faq">常見問題</a>
+    </nav>
+    <div class="nav-right">
+      <div class="cart-chip" id="cartChip">🛒<span class="cart-badge" id="cartBadge">0</span></div>
+      <a href="#faq" class="btn btn-primary btn-sm">免費開戶</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container hero-inner">
+    <div>
+      <span class="hero-badge">🔥 小資族最愛・千檔任你選</span>
+      <h1>1,000 元<br>解鎖<span class="hl">無限配置</span></h1>
+      <p>你的投資美食街｜1,000 元自由配，別家選不到的，這裡一次買齊！打破單檔 3,000 元門檻，用電商購物車的邏輯，一鍵打包你的第一份資產配置。</p>
+      <div class="hero-cta">
+        <a href="#combos" class="btn btn-primary">看熱門套餐</a>
+        <a href="#faq" class="btn btn-outline-light">免費開戶</a>
+      </div>
+      <div class="hero-trust">
+        <span>✅ 金管會核准</span>
+        <span>🔒 TWCA 安全認證</span>
+        <span>📈 全網選擇最多</span>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="drop-card"><div class="amt">$1,000</div><div class="lbl">科技型基金</div></div>
+      <div class="drop-card"><div class="amt">$1,000</div><div class="lbl">高股息基金</div></div>
+      <div class="drop-card"><div class="amt">$1,000</div><div class="lbl">全球債券</div></div>
+      <div class="cart-well">🛒</div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="compare">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">為什麼選我們</span>
+      <h2 class="section-title">傳統基金平台 vs. 口袋基金</h2>
+      <p class="section-sub">門檻更低、選擇更多、打包更快 — 把嚴肅的金融挑選，變成輕鬆的購物體驗。</p>
+    </div>
+    <div class="compare-grid">
+      <div class="compare-card">
+        <h3>😐 傳統基金平台</h3>
+        <div class="compare-row"><span class="k">投資門檻</span><span class="v">單檔 $3,000 起</span></div>
+        <div class="compare-row"><span class="k">基金選擇</span><span class="v">數百檔，資訊零散</span></div>
+        <div class="compare-row"><span class="k">申購流程</span><span class="v">逐檔填單、流程繁瑣</span></div>
+        <div class="compare-row"><span class="k">組合方式</span><span class="v">需自行研究搭配</span></div>
+      </div>
+      <div class="compare-card win">
+        <h3>🚀 口袋基金</h3>
+        <div class="compare-row"><span class="k">投資門檻</span><span class="v">單檔 $1,000 起</span></div>
+        <div class="compare-row"><span class="k">基金選擇</span><span class="v">1,000+ 檔，主題分類</span></div>
+        <div class="compare-row"><span class="k">申購流程</span><span class="v">購物車一鍵打包結帳</span></div>
+        <div class="compare-row"><span class="k">組合方式</span><span class="v">明星套餐直接套用</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="combos" style="background:var(--card);">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">明星主題組合包</span>
+      <h2 class="section-title">每月 $3,000，三檔黃金配方</h2>
+      <p class="section-sub">解決新手選擇困難，情境化套餐一鍵放入購物車。</p>
+    </div>
+    <div class="combo-grid" id="comboGrid"></div>
+  </div>
+</section>
+
+<section class="section" id="calc">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">DIY 配資試算器</span>
+      <h2 class="section-title">拉一拉，看看你的預算能買到什麼</h2>
+      <p class="section-sub">預算越分散，波動風險越低 — 用滑桿感受分散投資的威力。</p>
+    </div>
+    <div class="calc-wrap">
+      <div>
+        <div class="calc-label">每月投資預算</div>
+        <div class="calc-value" id="calcAmount">$3,000 <span>／月</span></div>
+        <input type="range" min="1000" max="10000" step="1000" value="3000" id="budgetSlider">
+        <div class="calc-scale"><span>$1,000</span><span>$10,000</span></div>
+        <div class="calc-note" id="calcNote">以每檔 $1,000 計算，這筆預算可同時配置 <b>3</b> 檔基金，打造跨資產、跨地區的分散組合。</div>
+      </div>
+      <div class="calc-chart">
+        <div class="bar-row"><div class="bar-label">波動風險</div><div class="bar-track"><div class="bar-fill risk" id="riskBar" style="width:70%"></div></div><div class="bar-val" id="riskVal">中高</div></div>
+        <div class="bar-row"><div class="bar-label">分散防護力</div><div class="bar-track"><div class="bar-fill stable" id="stableBar" style="width:30%"></div></div><div class="bar-val" id="stableVal">偏低</div></div>
+        <div class="bar-row"><div class="bar-label">可配置檔數</div><div class="bar-track"><div class="bar-fill stable" id="countBar" style="width:30%;background:linear-gradient(90deg,#8FD9C4,var(--teal-dark));"></div></div><div class="bar-val" id="countVal">3 檔</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="treasure" style="background:var(--card);">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">千檔主題尋寶庫</span>
+      <h2 class="section-title">選擇比別家多，主題一次找到</h2>
+      <p class="section-sub">依主題快速篩選，看到喜歡的直接加入購物車。</p>
+    </div>
+    <div class="tag-filter" id="tagFilter"></div>
+    <div class="fund-grid" id="fundGrid"></div>
+  </div>
+</section>
+
+<section class="section" id="steps">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">新手安心 4 步驟</span>
+      <h2 class="section-title">從開戶到定期扣款，全程安心</h2>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card"><div class="step-num">1</div><h4>線上開戶</h4><p>免臨櫃、免紙本，手機 5 分鐘完成。</p></div>
+      <div class="step-card"><div class="step-num">2</div><h4>KYC 評估</h4><p>了解投資屬性，推薦適合你的組合。</p></div>
+      <div class="step-card"><div class="step-num">3</div><h4>一鍵結帳</h4><p>購物車確認明細，一次授權完成申購。</p></div>
+      <div class="step-card"><div class="step-num">4</div><h4>定期扣款</h4><p>每月自動分筆扣款，長期累積資產。</p></div>
+    </div>
+    <div class="trust-badges">
+      <div class="badge-pill">✅ 金管會核准</div>
+      <div class="badge-pill">🔒 TWCA 安全認證</div>
+      <div class="badge-pill">📞 專人客服協助</div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="faq" style="background:var(--card);">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">常見問題</span>
+      <h2 class="section-title">還有疑問？這裡幫你解答</h2>
+    </div>
+    <div class="faq-list" id="faqList"></div>
+
+    <div class="cta-banner">
+      <h3>🎁 新戶開戶禮：首筆申購享手續費折抵</h3>
+      <p>現在開戶，最快今天就能完成你的第一組資產配置。</p>
+      <a href="#" class="btn btn-primary">立即免費開戶</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>口袋基金 Pocket Fund（示範頁面）｜本頁面為 Landing Page 企劃提案之視覺化展示，商品、報酬率與費率數字僅供介面示意，非真實金融商品資訊，亦不構成投資建議。</p>
+  <p>投資一定有風險，基金投資有賺有賠，申購前請詳閱公開說明書。© 2026 Pocket Fund Concept Page.</p>
+</footer>
+
+<div class="cart-bar" id="cartBar">
+  <div class="cart-bar-inner">
+    <div class="cart-bar-info">已選 <b id="cartCount">0</b> 檔標的<span class="sep">｜</span>每月合扣 <b id="cartTotal">$0</b></div>
+    <button class="btn btn-primary btn-sm" id="checkoutBtn">一鍵打包結帳</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const combos = [
+  {
+    id:'tech', tag:'衝鋒成長型', title:'科技狂潮雙引擎', priceEach:1000,
+    items:[
+      {n:'美股科技型基金', d:'卡位矽谷巨頭'},
+      {n:'全球 AI／半導體基金', d:'鎖定硬體供應鏈爆發力'},
+      {n:'台股高股息基金', d:'提供在地現金流與下檔支撐'}
+    ],
+    copy:'不用萬把塊，3,000 元直通矽谷與護國神山！有衝勁也有下檔防禦。'
+  },
+  {
+    id:'defense', tag:'安心防禦型', title:'抗震穩健包', priceEach:1000,
+    items:[
+      {n:'多元資產平衡型基金', d:'經理人動態調配股債比例'},
+      {n:'美國投資等級債基金', d:'打造資產防守盾牌'},
+      {n:'全球高股息股票基金', d:'穩健參與企業成長與領息'}
+    ],
+    copy:'告別心驚膽跳！3,000 元打造法人級防護網，市場震盪也能睡得著。'
+  },
+  {
+    id:'global', tag:'全天候配置型', title:'環球大滿貫', priceEach:1000,
+    items:[
+      {n:'全球大型股票型基金', d:'布局全球頂尖企業'},
+      {n:'全球複合型債券基金', d:'對抗降息與景氣波動'},
+      {n:'黃金與貴金屬主題基金', d:'地緣風險與通膨避險工具'}
+    ],
+    copy:'別家只有精選，我們給你全球全選！股票＋債券＋黃金三大模組一次打包。'
+  }
+];
+
+const funds = [
+  {tag:'AI科技', name:'領航全球AI創新基金', ret:18.4},
+  {tag:'AI科技', name:'半導體核心供應鏈基金', ret:22.1},
+  {tag:'美債避險', name:'美國投資等級債券基金', ret:4.2},
+  {tag:'美債避險', name:'新興市場主權債基金', ret:5.6},
+  {tag:'高股息', name:'台股高股息精選基金', ret:9.8},
+  {tag:'高股息', name:'全球高股息股票基金', ret:8.3},
+  {tag:'全球資產', name:'多元資產動態平衡基金', ret:6.1},
+  {tag:'全球資產', name:'全球大型股票型基金', ret:13.7},
+  {tag:'黃金貴金屬', name:'黃金與貴金屬主題基金', ret:11.2},
+  {tag:'黃金貴金屬', name:'礦業資源精選基金', ret:7.9},
+  {tag:'高股息', name:'亞太高息平衡基金', ret:7.4},
+  {tag:'AI科技', name:'雲端運算與大數據基金', ret:16.5}
+];
+
+const faqs = [
+  {q:'匯率會影響我的申購金額嗎？', a:'若選擇海外計價基金，扣款當下會以當日匯率結算為新台幣金額，購物車結帳頁會清楚列出換算後金額，不會有隱藏費用。'},
+  {q:'每月扣款日是哪一天？', a:'預設為每月 5 日、15 日或 25 日，可於結帳時自由選擇，扣款失敗會於 3 個工作日內提醒您補扣，不影響既有配置。'},
+  {q:'TISA 與一般帳戶有什麼不同？', a:'TISA（投資型帳戶）可跨平台整合已投資部位、享有稅務試算工具與更完整的資產總覽；一般帳戶則僅顯示於本平台申購之部位。'},
+  {q:'我可以隨時更改或贖回組合嗎？', a:'可以，組合包僅為建議配置，購物車內任一檔基金皆可單獨調整金額或移除，贖回無鎖定期，惟仍以各基金公開說明書規範為準。'}
+];
+
+const cart = [];
+const money = n => '$' + n.toLocaleString('en-US');
+
+function renderCombos(){
+  const grid = document.getElementById('comboGrid');
+  grid.innerHTML = combos.map(c => `
+    <div class="combo-card">
+      <span class="combo-tag">${c.tag}</span>
+      <h3>${c.title}</h3>
+      <div class="combo-price">每月投入 <b>${money(c.priceEach*3)}</b>（3 檔 x $1,000）</div>
+      <div class="combo-list">
+        ${c.items.map(i=>`<div class="combo-item"><span class="dot"></span><div><b>${i.n}</b><span>${i.d}</span></div></div>`).join('')}
+      </div>
+      <div class="combo-copy">${c.copy}</div>
+      <button class="btn btn-primary" onclick="addCombo('${c.id}', event)">＋ 一鍵全套放入購物車</button>
+    </div>
+  `).join('');
+}
+
+function renderTags(){
+  const tags = ['全部', ...new Set(funds.map(f=>f.tag))];
+  const wrap = document.getElementById('tagFilter');
+  wrap.innerHTML = tags.map((t,i)=>`<button class="tag-btn ${i===0?'active':''}" data-tag="${t}">${t}</button>`).join('');
+  wrap.querySelectorAll('.tag-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      wrap.querySelectorAll('.tag-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      renderFunds(btn.dataset.tag);
+    });
+  });
+}
+
+function renderFunds(filter='全部'){
+  const grid = document.getElementById('fundGrid');
+  const list = filter==='全部' ? funds : funds.filter(f=>f.tag===filter);
+  grid.innerHTML = list.map((f,idx)=>`
+    <div class="fund-card">
+      <span class="fund-tag">${f.tag}</span>
+      <div class="fund-name">${f.name}</div>
+      <div class="fund-price">最低 $1,000 起</div>
+      <div class="fund-meta">
+        <div class="fund-return"><span>近一年報酬率</span><br><b>+${f.ret}%</b></div>
+        <button class="add-btn" onclick="addFund('${f.name.replace(/'/g,"")}', event)">＋</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderFaq(){
+  const list = document.getElementById('faqList');
+  list.innerHTML = faqs.map((f,i)=>`
+    <div class="faq-item" id="faq-${i}">
+      <button class="faq-q" onclick="toggleFaq(${i})"><span>${f.q}</span><span class="plus">＋</span></button>
+      <div class="faq-a"><p>${f.a}</p></div>
+    </div>
+  `).join('');
+}
+function toggleFaq(i){
+  const item = document.getElementById('faq-'+i);
+  const a = item.querySelector('.faq-a');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(el=>{
+    el.classList.remove('open');
+    el.querySelector('.faq-a').style.maxHeight = null;
+  });
+  if(!isOpen){
+    item.classList.add('open');
+    a.style.maxHeight = a.scrollHeight + 'px';
+  }
+}
+
+function updateCartUI(){
+  const count = cart.length;
+  const total = cart.reduce((s,c)=>s+c.price,0);
+  document.getElementById('cartCount').textContent = count;
+  document.getElementById('cartTotal').textContent = money(total);
+  const badge = document.getElementById('cartBadge');
+  badge.textContent = count;
+  badge.classList.toggle('show', count>0);
+  document.getElementById('cartBar').classList.toggle('show', count>0);
+}
+
+function flyToCart(startEl){
+  const startRect = startEl.getBoundingClientRect();
+  const cartRect = document.getElementById('cartChip').getBoundingClientRect();
+  const fly = document.createElement('div');
+  fly.className = 'fly-card';
+  fly.textContent = '+1';
+  fly.style.left = startRect.left + 'px';
+  fly.style.top = startRect.top + 'px';
+  document.body.appendChild(fly);
+  requestAnimationFrame(()=>{
+    fly.style.left = cartRect.left + 'px';
+    fly.style.top = cartRect.top + 'px';
+    fly.style.transform = 'scale(0.3)';
+    fly.style.opacity = '0.2';
+  });
+  setTimeout(()=>fly.remove(), 650);
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(showToast._tm);
+  showToast._tm = setTimeout(()=>t.classList.remove('show'), 1800);
+}
+
+function addFund(name, evt){
+  cart.push({name, price:1000});
+  updateCartUI();
+  flyToCart(evt.currentTarget);
+  showToast(name + ' 已加入購物車');
+}
+
+function addCombo(id, evt){
+  const combo = combos.find(c=>c.id===id);
+  combo.items.forEach(i=>cart.push({name:i.n, price:combo.priceEach}));
+  updateCartUI();
+  flyToCart(evt.currentTarget);
+  showToast(combo.title + ' 全套已加入購物車');
+}
+
+document.getElementById('checkoutBtn').addEventListener('click', ()=>{
+  if(cart.length===0) return;
+  showToast('已為您整理購物車，前往結帳頁確認明細');
+});
+
+const slider = document.getElementById('budgetSlider');
+function updateCalc(){
+  const val = parseInt(slider.value,10);
+  const n = val/1000;
+  document.getElementById('calcAmount').innerHTML = money(val) + ' <span>／月</span>';
+  document.getElementById('countVal').textContent = n + ' 檔';
+  document.getElementById('countBar').style.width = Math.min(100, n*10) + '%';
+  const risk = Math.max(20, 100 - n*8);
+  const stable = Math.min(95, 20 + n*8);
+  document.getElementById('riskBar').style.width = risk + '%';
+  document.getElementById('stableBar').style.width = stable + '%';
+  document.getElementById('riskVal').textContent = risk>70?'偏高':risk>45?'中等':'偏低';
+  document.getElementById('stableVal').textContent = stable>70?'偏高':stable>45?'中等':'偏低';
+  document.getElementById('calcNote').innerHTML =
+    `以每檔 $1,000 計算，這筆預算可同時配置 <b>${n}</b> 檔基金，${n>=5?'足以打造跨資產、跨地區的完整分散組合。':n>=3?'打造跨資產、跨地區的分散組合。':'建議再拉高預算以獲得更完整的分散效果。'}`;
+}
+slider.addEventListener('input', updateCalc);
+
+renderCombos();
+renderTags();
+renderFunds();
+renderFaq();
+updateCalc();
+</script>
+</body>
+</html>
