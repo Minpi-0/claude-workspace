@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>基金 Explorer｜故事旅程版</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1b1b1b;
+  --cream:#FFF4E1;
+  --cream-deep:#FDEFD2;
+  --yellow:#FFE27A;
+  --yellow-hl:#FFD84D;
+  --red:#E3202B;
+  --red-text:#C8101E;
+  --purple-hl:#CDBFFF;
+  --mint:#C9F5E0;
+  --lav:#E1DCFF;
+  --blue:#CFE6FF;
+  --muted:#6b6b6b;
+  --line:#e5ddcb;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:'Noto Sans TC','PingFang TC','Microsoft JhengHei',sans-serif;
+  color:var(--ink);
+  background:var(--cream);
+  background-image:radial-gradient(rgba(0,0,0,.07) 1.2px,transparent 1.3px);
+  background-size:22px 22px;
+  min-width:1440px;
+  -webkit-font-smoothing:antialiased;
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+a{color:inherit;text-decoration:none;}
+
+/* ---------- prototype bar + nav ---------- */
+.proto{height:45px;background:#1a1a1f;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font-size:12.5px;font-weight:700;}
+.proto .grp{display:flex;gap:10px;}
+.proto .seg{display:flex;background:#2b2b31;border-radius:8px;padding:4px;gap:2px;}
+.proto .seg button{color:#cfcfd6;font-size:12px;font-weight:700;padding:6px 14px;border-radius:6px;}
+.proto .seg button.on{background:#fff;color:#111;}
+.nav{height:62px;background:#fff;border-bottom:2px solid var(--ink);display:flex;align-items:center;padding:0 21px;}
+.logo{display:flex;align-items:center;gap:6px;margin-right:34px;}
+.logo .txt{line-height:1.05;}
+.logo b{display:block;font-size:15px;font-weight:900;letter-spacing:-.2px;color:#111;}
+.logo b i{font-style:italic;color:var(--red);}
+.logo small{font-size:9.5px;font-weight:700;letter-spacing:.5px;}
+.nav .links{display:flex;gap:42px;font-size:15.5px;font-weight:500;color:#333;}
+.nav .nav-r{margin-left:auto;display:flex;align-items:center;gap:20px;}
+.nav .cart{display:flex;align-items:center;gap:6px;font-size:15.5px;font-weight:500;}
+.btn-open{background:var(--red);color:#fff;font-weight:700;font-size:15.5px;height:44px;padding:0 17px;border-radius:9px;display:flex;align-items:center;gap:6px;box-shadow:0 2px 0 rgba(0,0,0,.35);}
+.btn-login{height:44px;padding:0 12px;border:1.5px solid var(--red);color:var(--red);font-weight:700;font-size:15.5px;border-radius:9px;background:#fff;min-width:48px;}
+
+/* ---------- page ---------- */
+.page{padding:0 44px 60px;}
+.crumb{font-size:12.5px;color:#555;padding:26px 0 10px;}
+.crumb.hidden{display:none;}
+
+.shell{
+  background:#fff;border:3px solid var(--ink);border-radius:28px;
+  box-shadow:6px 6px 0 var(--ink),11px 11px 0 #f0d9ab;
+  position:relative;overflow:visible;
+}
+.shell.story{margin-top:14px;display:grid;grid-template-columns:1fr 382px;}
+
+/* ---------- HOME ---------- */
+#home{display:none;}
+body[data-stage="0"] #home{display:block;}
+body[data-stage="0"] #storyShell{display:none;}
+body:not([data-stage="0"]) #home{display:none;}
+.hero{height:724px;background:#fff;position:relative;text-align:center;}
+.hero h1{font-size:31px;font-weight:900;padding-top:48px;letter-spacing:.3px;}
+.hl{background:var(--yellow-hl);border-radius:8px;padding:0 6px;}
+.hl.purple{background:var(--purple-hl);}
+.hero h2{font-size:26px;font-weight:900;margin-top:14px;}
+.hero p.sub{font-size:14px;color:#555;margin-top:8px;}
+.bubble{
+  position:absolute;transform:translate(-50%,-50%);
+  padding:9px 16px;border:2.5px solid var(--ink);border-radius:999px;
+  font-size:14.5px;font-weight:700;white-space:nowrap;cursor:pointer;
+  box-shadow:3px 4px 0 var(--ink);transition:transform .15s;
+}
+.bubble:hover{transform:translate(-50%,-52%) scale(1.04) rotate(var(--r,0deg));}
+.bubble.y{background:#FFE27A}.bubble.m{background:#C9F5E0}.bubble.b{background:#CFE6FF}.bubble.l{background:#E1DCFF}
+.shuffle{position:absolute;left:674px;top:381px;transform:translate(-50%,-50%);height:30px;padding:0 14px;border:2.5px solid var(--ink);border-radius:999px;background:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;gap:6px;box-shadow:2px 3px 0 var(--ink);}
+.mascot{position:absolute;left:680px;top:505px;transform:translate(-50%,-50%);width:200px;height:200px;}
+.hint{position:absolute;left:674px;top:609px;transform:translateX(-50%);font-size:11.5px;color:#444;font-weight:500;}
+.ask{position:absolute;left:366px;top:641px;display:flex;gap:7px;align-items:center;}
+.ask input{width:505px;height:50px;border:2.5px solid var(--ink);border-radius:999px;padding:0 22px;font:inherit;font-size:15px;box-shadow:3px 4px 0 var(--ink);background:#fff;}
+.ask input::placeholder{color:#999;}
+.ask button{height:50px;width:105px;background:var(--red);color:#fff;font-weight:900;font-size:14.5px;border:2.5px solid var(--ink);border-radius:999px;box-shadow:3px 4px 0 var(--ink);}
+
+.sec-head{display:flex;align-items:center;margin:26px 0 12px;}
+.sec-head .ic{width:44px;height:44px;border:2px solid var(--ink);border-radius:12px;background:#FFD9DD;display:grid;place-items:center;margin-right:10px;}
+.sec-head h3{font-size:22px;font-weight:900;}
+.sec-head .meta{font-size:12.5px;color:#555;margin-left:10px;}
+.sec-head .more{margin-left:auto;border:2px solid var(--ink);border-radius:999px;background:#fff;font-size:13px;font-weight:700;padding:7px 14px;box-shadow:2px 2px 0 var(--ink);}
+.fund-row{display:flex;gap:12px;overflow:hidden;padding-bottom:6px;}
+.fund-card{flex:0 0 244px;height:132px;background:#fff;border:2.5px solid var(--ink);border-radius:18px;padding:16px 15px;box-shadow:3px 3px 0 var(--ink);border-top:6px solid #FFC9D1;position:relative;}
+.fund-card b{display:block;font-size:14.5px;line-height:1.4;font-weight:900;}
+.fund-card .iss{margin-top:8px;font-size:12.5px;color:#666;display:flex;align-items:center;gap:6px;}
+.rr{background:#FFD84D;border:1.5px solid var(--ink);border-radius:999px;font-size:12px;font-weight:900;padding:1px 9px;flex:none;}
+
+/* ---------- STORY: left ---------- */
+.pane-l{padding:20px 31px 40px;border-right:3px solid var(--ink);min-height:930px;position:relative;}
+.pane-l h1{text-align:center;font-size:21px;font-weight:900;margin-bottom:8px;}
+.pane-l h1 .hl{border-radius:7px;padding:0 6px;}
+.trip-head{display:flex;justify-content:space-between;align-items:center;font-size:13px;margin:4px 0 8px;}
+.trip-head b{font-weight:900;font-size:13px;}
+.trip-head .r{font-size:12.5px;color:#555;font-weight:700;}
+.trip-head .r u{cursor:pointer;color:#333;}
+.mapbox{background:var(--cream-deep);border:2px solid var(--ink);border-radius:24px;height:204px;position:relative;box-shadow:0 0 0 0 #000;}
+.mapbox svg{width:100%;height:100%;display:block;}
+.mapbox text{font-family:inherit;}
+.ask-line{text-align:center;font-size:14px;margin:18px 0 12px;color:#333;font-weight:500;}
+.ask-line .hl{font-weight:900;padding:1px 6px;}
+
+.hist{position:relative;margin:0 auto;width:100%;}
+.strip{height:30px;background:#FFE9A8;border:2px solid var(--ink);border-bottom:none;border-radius:8px 8px 0 0;display:flex;justify-content:space-between;align-items:center;padding:0 16px 0 14px;font-size:12px;font-weight:700;margin:0 auto -6px;position:relative;}
+.strip small{font-weight:900;font-size:12px;}
+.strip em{font-style:normal;color:var(--red-text);font-weight:700;}
+
+.deck{position:relative;height:340px;margin-top:2px;}
+.card-side{
+  position:absolute;top:42px;width:270px;height:218px;border:2.5px solid var(--ink);border-radius:20px;padding:14px 15px;
+  cursor:pointer;transition:transform .18s ease;
+  box-shadow:3px 4px 0 var(--ink);
+}
+.card-side.cs-l{left:30px;background:#DFD8FF repeating-linear-gradient(135deg,rgba(255,255,255,.35) 0 5px,transparent 5px 10px);transform:rotate(-7deg);border-right:none;}
+.card-side.cs-r{right:30px;background:#C8F4E0 repeating-linear-gradient(135deg,rgba(255,255,255,.35) 0 5px,transparent 5px 10px);transform:rotate(7deg);border-left:none;}
+.card-side.cs-l:hover{transform:rotate(-9deg) translateX(-6px);}
+.card-side.cs-r:hover{transform:rotate(9deg) translateX(6px);}
+.card-side .arrow{width:28px;height:28px;border:2px solid var(--ink);border-radius:50%;background:#fff;display:grid;place-items:center;font-size:13px;font-weight:900;}
+.card-side .swipe{font-size:11px;font-weight:700;margin-top:22px;color:#333;}
+.card-side h4{font-size:19px;font-weight:900;margin-top:2px;}
+.card-side p{font-size:12px;line-height:1.5;color:#333;margin-top:4px;font-weight:500;}
+.card-side.cs-l .tx{padding-right:56px;}
+.card-side.cs-r .tx{text-align:right;padding-left:56px;}
+.card-side.cs-r .arrow{margin-left:auto;}
+.card-side .swipe b{font-weight:700;}
+.main-card{
+  position:absolute;left:50%;top:0;transform:translateX(-50%);width:520px;
+  background:#fff;border:2.5px solid var(--ink);border-radius:18px;overflow:hidden;
+  box-shadow:4px 5px 0 var(--ink);z-index:3;
+}
+.main-card .hd{display:flex;justify-content:space-between;align-items:center;background:#FFE48A;border-bottom:2px solid var(--ink);padding:11px 18px;font-size:11.5px;font-weight:900;}
+.main-card .bd{padding:14px 18px 20px;}
+.main-card h3{font-size:20px;font-weight:900;margin-bottom:10px;}
+.legend{background:#FFF1D6;border-radius:8px;padding:8px 12px;font-size:11.5px;font-weight:700;color:#333;display:flex;gap:8px;align-items:center;}
+.legend .m{background:var(--yellow-hl);padding:1px 5px;border-radius:3px;}
+.legend .d{border-bottom:2px dashed #555;padding:0 5px;margin-left:10px;}
+.story-text{font-size:15.5px;line-height:2;margin-top:10px;font-weight:500;color:#222;}
+.co{background:var(--yellow-hl);font-weight:900;padding:1px 3px;border-radius:3px;}
+.co.nof{background:none;border-bottom:2px dashed #666;font-weight:700;padding:0 2px;}
+.look{display:block;text-align:center;margin:22px 0 14px;font-size:12px;color:#333;text-decoration:underline;font-weight:700;}
+.ai-note{text-align:center;font-size:10px;color:#666;line-height:1.55;width:520px;margin:0 auto;}
+.ai-note .tag{display:inline-block;border:1.5px solid var(--ink);border-radius:999px;padding:0 8px;font-size:10px;font-weight:900;background:#fff;color:#222;margin-right:3px;}
+
+/* ---------- STORY: right ---------- */
+.pane-r{padding:18px 11px 28px 12px;background:#FFF9EB;border-radius:0 25px 25px 0;}
+.pf{background:#fff;border:2.5px solid var(--ink);border-radius:22px;box-shadow:4px 5px 0 var(--ink);position:relative;padding:36px 12px 18px;background-image:linear-gradient(180deg,#FFE9A8 0,#FFF6D8 80px,#fff 130px);}
+.pf .badge{position:absolute;left:50%;top:-13px;transform:translateX(-50%);background:var(--red);color:#fff;font-weight:900;font-size:12.5px;padding:3px 22px;border:2.5px solid var(--ink);border-radius:999px;white-space:nowrap;box-shadow:2px 2px 0 var(--ink);}
+.pf h3{text-align:center;font-size:17px;font-weight:900;line-height:1.35;color:#8a3b00;color:#6b2a00;padding:0 6px;}
+.pf .sub{text-align:center;font-size:11px;color:#555;margin-top:6px;font-weight:500;}
+.cobox{background:#fff;border:1.5px solid var(--line);border-radius:10px;margin-top:14px;padding:9px 10px 10px;}
+.cobox .t{display:flex;justify-content:space-between;font-size:11px;font-weight:900;}
+.cobox .t span{font-weight:500;color:#777;}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
+.chip{background:var(--yellow-hl);border:1.5px solid var(--ink);border-radius:999px;font-size:11px;font-weight:900;padding:2px 9px;display:flex;align-items:center;gap:5px;cursor:default;}
+.chip i{font-style:normal;font-size:11px;cursor:pointer;opacity:.75;}
+.chip i:hover{opacity:1;}
+.fund{background:#fff;border:2.5px solid var(--ink);border-radius:13px;margin-top:9px;padding:9px 10px 9px 10px;display:grid;grid-template-columns:22px 1fr 76px;column-gap:7px;box-shadow:2px 2px 0 var(--ink);}
+.fund .no{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--ink);background:var(--yellow-hl);font-size:10.5px;font-weight:900;display:grid;place-items:center;margin-top:20px;}
+.fund .nm{font-size:11.5px;font-weight:900;line-height:1.45;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;}
+.fund .is{font-size:10.5px;color:#666;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.fund .bar{height:5px;background:#EDE6D4;border-radius:3px;margin-top:8px;position:relative;width:128px;}
+.fund .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--red);border-radius:3px;}
+.fund .tg{margin-top:6px;font-size:10.5px;color:#444;font-weight:500;}
+.fund .tg b{background:var(--yellow-hl);font-weight:900;padding:0 3px;border-radius:2px;margin-right:2px;}
+.fund .pct{text-align:right;}
+.fund .pct strong{display:block;color:var(--red);font-size:22px;font-weight:900;line-height:1;}
+.fund .pct small{display:block;font-size:9px;color:#444;margin-top:2px;font-weight:700;}
+.plus{width:26px;height:26px;border-radius:50%;border:2px solid var(--ink);background:#fff;box-shadow:2px 2px 0 var(--ink);font-size:17px;font-weight:700;line-height:20px;display:inline-grid;place-items:center;flex:none;transition:.12s;}
+.plus.on{background:var(--ink);color:#fff;}
+.fund .pct .plus{margin-top:6px;}
+.join{display:block;margin:15px auto 0;background:var(--red);color:#fff;font-weight:900;font-size:13.5px;padding:10px 24px;border:2.5px solid var(--ink);border-radius:999px;box-shadow:3px 3px 0 var(--ink);}
+.foot-note{font-size:10.5px;color:#666;line-height:1.55;margin-top:12px;font-weight:500;}
+.more-list{margin-top:14px;border-top:2px dashed #cfc3a5;padding-top:12px;}
+.more-list h5{font-size:12px;font-weight:900;}
+.more-list h5 span{font-weight:500;font-size:10.5px;color:#666;margin-left:4px;}
+.mrow{display:flex;align-items:center;gap:6px;background:#fff;border:1.5px solid var(--line);border-radius:9px;padding:7px 8px 7px 10px;margin-top:7px;font-size:11px;font-weight:900;}
+.mrow .n{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mrow .p{color:var(--red-text);font-weight:900;min-width:34px;text-align:right;}
+.mrow .plus{width:22px;height:22px;font-size:15px;line-height:16px;}
+
+/* ---- 純 CSS 導覽（不依賴 JavaScript）---- */
+.shell.story.stg{display:none;}
+.shell.story.stg:target{display:grid;}
+.stg:target ~ #crumb,.stg:target ~ #home{display:none !important;}
+#home{display:block !important;}
+.stg:target ~ #home{display:none !important;}
+.ask .go{height:50px;width:105px;background:var(--red);color:#fff;font-weight:900;font-size:14.5px;border:2.5px solid var(--ink);border-radius:999px;box-shadow:3px 4px 0 var(--ink);display:grid;place-items:center;}
+a.card-side{display:block;color:inherit;}
+.restart{color:#333;text-decoration:underline;}
+</style>
+</head>
+<body>
+
+<div class="proto">
+  <div>基金 Explorer・故事旅程版 prototype</div>
+  <div class="grp">
+    <div class="seg" data-seg><button class="on">未開戶</button><button>已開戶</button></div>
+    <div class="seg" data-seg><button class="on">Web</button><button>手機</button></div>
+  </div>
+</div>
+
+<div class="nav">
+  <div class="logo">
+    <svg width="18" height="20" viewBox="0 0 18 20"><path d="M9 0l8.5 4.9v10.2L9 20 .5 15.1V4.9z" fill="#E3202B"/><path d="M9 5.5l4.4 2.5v5L9 15.5 4.6 13V8z" fill="#fff"/></svg>
+    <div class="txt"><b>CMoney<i>Fund</i></b><small>口袋基金 ETF 策略</small></div>
+  </div>
+  <div class="links"><a href="#">買基金</a><a href="#">買策略</a><a href="#">關於我們</a><a href="#">客服中心</a></div>
+  <div class="nav-r">
+    <div class="cart"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#222" stroke-width="2"><path d="M2 3h3l2.5 12h11L21 7H6"/><circle cx="9" cy="20" r="1.6"/><circle cx="18" cy="20" r="1.6"/></svg>購物車</div>
+    <button class="btn-open"><svg width="17" height="17" viewBox="0 0 24 24" fill="#fff"><path d="M6 3h12l4 6-10 12L2 9z"/></svg>開戶</button>
+    <button class="btn-login">登入</button>
+  </div>
+</div>
+
+<div class="page">
+  <section class="shell story stg" id="s1">
+    <div class="pane-l">
+      <h1>AI <span class="hl">幫你挖掘</span>生活情境下的潛在商機！</h1>
+      <div class="trip-head"><b>你的思維旅程</b><span class="r"><span>1</span> / 10 ・ <a class="restart" href="#home">↻ 重新問一句</a></span></div>
+      <div class="mapbox"><svg viewBox="0 0 916 204" preserveAspectRatio="none"><path d="M90,103 C190,103 190,103 290,103" fill="none" stroke="#1b1b1b" stroke-width="4.5" stroke-linecap="round"></path><path d="M304,103 Q341,103 384,62" fill="none" stroke="#D8212B" stroke-width="2" stroke-dasharray="6 4"></path><text x="392" y="67" font-size="14" font-weight="900" fill="#C8101E">← 乾脆去避暑</text><path d="M304,103 Q341,103 384,141" fill="none" stroke="#D8212B" stroke-width="2" stroke-dasharray="6 4"></path><text x="392" y="146" font-size="14" font-weight="900" fill="#C8101E">→ 氣候變遷背後</text><rect x="70" y="92" width="40" height="22" rx="11" fill="#9DF0C5" stroke="#1b1b1b" stroke-width="2"></rect><text x="90" y="107.5" font-size="11.5" font-weight="900" text-anchor="middle">起點</text><circle cx="290" cy="103" r="17" fill="#FFD84D" stroke="#1b1b1b" stroke-width="2.5"></circle><text x="290" y="107.5" font-size="13" font-weight="900" text-anchor="middle">1</text><text x="90" y="137" font-size="13.5" font-weight="900" fill="#1b1b1b" text-anchor="middle">冬天越來越不冷了</text><text x="290" y="137" font-size="13.5" font-weight="900" fill="#1b1b1b" text-anchor="middle">暖冬現象的生活改變</text></svg></div>
+      <div class="ask-line">接下來想往哪走？<span class="hl">把故事卡往左或往右拖</span>，後面那張就是你要走的路</div>
+      <div class="hist"></div>
+      <div class="deck" style="height: 318px;"><a class="card-side cs-l" href="#s2"><div class="tx"><div class="arrow">←</div><div class="swipe">往左滑</div><h4>乾脆去避暑</h4><p>反常暖冬推動了造雪與避暑旅遊熱潮</p></div></a>
+   <a class="card-side cs-r" href="#s2"><div class="tx"><div class="arrow">→</div><div class="swipe">往右滑</div><h4>氣候變遷背後</h4><p>全球暖化推動潔淨能源與減碳解方</p></div></a>
+   <div class="main-card"><div class="hd"><span>第 1 / 10 張</span><span>暖冬現象的生活改變</span></div>
+    <div class="bd"><h3>收不進衣櫃的薄長袖</h3>
+     <div class="legend"><span class="m">螢光標記</span>有基金持有，會算進組合<span class="d">虛線</span>目前沒有基金持有</div>
+     <div class="story-text">十二月的午後陽光依舊刺眼，你收起厚重羽絨外套，改穿 UNIQLO（<span class="co">迅銷</span>）輕便透氣的機能上衣。走進超商，你忍不住拿了一瓶 <span class="co nof">統一</span> 的冰涼茶飲消暑。回到家裡，屋內甚至有些悶熱，你隨手拿起遙控器打開 <span class="co">大金工業</span> 的節能空調，享受降溫的清爽，這才驚覺今年冬天真的很不一樣。</div></div></div></div>
+      <a class="look" href="#s1" style="display:none">先看目前的思維鏈</a>
+      <div class="ai-note"><span class="tag">AI 生成</span>故事與提到的公司為 AI 依你的文字所做的聯想，可能有錯誤或遺漏，僅供參考，不構成任何投資建議或個股推薦。</div>
+    </div>
+    <aside class="pane-r">
+      <div class="pf"><div class="badge">你的投資組合</div>
+   <h3>暖冬現象的生活改變</h3>
+   <div class="sub">依 2 家故事公司・基金持股合計由高到低</div>
+   <div class="cobox"><div class="t">組合用到的公司<span>覺得不相關就按 ✕ 拿掉</span></div><div class="chips"><span class="chip " style="">迅銷<i data-co="迅銷">✕</i></span><span class="chip " style="">大金工業<i data-co="大金工業">✕</i></span></div></div>
+   <div class="fund">
+      <div class="no">1</div>
+      <div><div class="nm">元大亞太成長基金</div><div class="is">元大投信</div>
+        <div class="bar"><i style="width:18.900000000000002%"></i></div>
+        <div class="tg"><b>迅銷</b> 2.7%</div></div>
+      <div class="pct"><strong>2.7%</strong><small>故事公司合計</small>
+        <button class="plus " data-k="f10元大亞太成長基金">+</button></div>
+    </div><div class="fund">
+      <div class="no">2</div>
+      <div><div class="nm">富達永續全球股票收益基金-A類型月配型(台幣)(本基金之配息來源可能為本金或收益平準金且並無保證收益及配息)</div><div class="is">富達投信</div>
+        <div class="bar"><i style="width:14%"></i></div>
+        <div class="tg"><b>大金工業</b> 2%</div></div>
+      <div class="pct"><strong>2.0%</strong><small>故事公司合計</small>
+        <button class="plus " data-k="f11富達永續全球股票收益基金-A類型月配型(台幣)(本基金之配息來源可能為本金或收益平準金且並無保證收益及配息)">+</button></div>
+    </div><div class="fund">
+      <div class="no">3</div>
+      <div><div class="nm">玉山全球消費商機基金</div><div class="is">玉山投信</div>
+        <div class="bar"><i style="width:8.4%"></i></div>
+        <div class="tg"><b>迅銷</b> 1.2%</div></div>
+      <div class="pct"><strong>1.2%</strong><small>故事公司合計</small>
+        <button class="plus " data-k="f12玉山全球消費商機基金">+</button></div>
+    </div>
+   <button class="join">一次加入清單（3 檔）</button>
+   
+   <div class="foot-note">每走一站都會把新故事的公司加進來重新排序。只表示基金持有這些公司，不代表適合你。</div></div>
+    </aside>
+  </section>
+  <section class="shell story stg" id="s2">
+    <div class="pane-l">
+      <h1>AI <span class="hl">幫你挖掘</span>生活情境下的潛在商機！</h1>
+      <div class="trip-head"><b>你的思維旅程</b><span class="r"><span>2</span> / 10 ・ <a class="restart" href="#home">↻ 重新問一句</a></span></div>
+      <div class="mapbox"><svg viewBox="0 0 916 204" preserveAspectRatio="none"><path d="M90,103 C190,103 190,103 290,103" fill="none" stroke="#1b1b1b" stroke-width="4.5" stroke-linecap="round"></path><path d="M290,103 C389.5,103 389.5,135 489,135" fill="none" stroke="#1b1b1b" stroke-width="4.5" stroke-linecap="round"></path><path d="M290,103 Q339,40 358,56" fill="none" stroke="#b9b09b" stroke-width="2" stroke-dasharray="5 4"></path><text x="388" y="46" font-size="12" fill="#a99f88" font-weight="700" text-anchor="middle">乾脆去避暑</text><path d="M503,135 Q548,135 599,94" fill="none" stroke="#D8212B" stroke-width="2" stroke-dasharray="6 4"></path><text x="607" y="99" font-size="14" font-weight="900" fill="#C8101E">← 乾淨移動潮</text><path d="M503,135 Q549.5,135 602,174" fill="none" stroke="#D8212B" stroke-width="2" stroke-dasharray="6 4"></path><text x="610" y="179" font-size="14" font-weight="900" fill="#C8101E">→ 智慧電網骨幹</text><rect x="70" y="92" width="40" height="22" rx="11" fill="#9DF0C5" stroke="#1b1b1b" stroke-width="2"></rect><text x="90" y="107.5" font-size="11.5" font-weight="900" text-anchor="middle">起點</text><circle cx="290" cy="103" r="12" fill="#FFF4DB" stroke="#1b1b1b" stroke-width="2.5"></circle><text x="290" y="107.5" font-size="11" font-weight="900" text-anchor="middle">1</text><circle cx="489" cy="135" r="17" fill="#FFD84D" stroke="#1b1b1b" stroke-width="2.5"></circle><text x="489" y="139.5" font-size="13" font-weight="900" text-anchor="middle">2</text><text x="90" y="137" font-size="13.5" font-weight="900" fill="#1b1b1b" text-anchor="middle">冬天越來越不冷了</text><text x="290" y="137" font-size="13.5" font-weight="900" fill="#1b1b1b" text-anchor="middle">暖冬現象的生活改變</text><text x="489" y="172" font-size="13.5" font-weight="900" fill="#1b1b1b" text-anchor="middle">對抗暖化的綠能解方</text><text x="385" y="100" font-size="12" font-weight="500" fill="#555" text-anchor="middle">氣候變遷背後</text></svg></div>
+      <div class="ask-line">接下來想往哪走？<span class="hl">把故事卡往左或往右拖</span>，後面那張就是你要走的路</div>
+      <div class="hist"><div class="strip" style="width:100%"><span><small>第 1 張</small>　暖冬現象的生活改變</span><em>選了「氣候變遷背後」</em></div></div>
+      <div class="deck" style="height: 318px;"><a class="card-side cs-l" href="#s3"><div class="tx"><div class="arrow">←</div><div class="swipe">往左滑</div><h4>乾淨移動潮</h4><p>不再依賴燃油，探訪馬路上的純電日常</p></div></a>
+   <a class="card-side cs-r" href="#s3"><div class="tx"><div class="arrow">→</div><div class="swipe">往右滑</div><h4>智慧電網骨幹</h4><p>綠電要怎麼穩定送到每一戶人家？</p></div></a>
+   <div class="main-card"><div class="hd"><span>第 2 / 10 張</span><span>對抗暖化的綠能解方</span></div>
+    <div class="bd"><h3>屋頂上的陽光革命</h3>
+     <div class="legend"><span class="m">螢光標記</span>有基金持有，會算進組合<span class="d">虛線</span>目前沒有基金持有</div>
+     <div class="story-text">暖冬的正午陽光格外耀眼，你抬頭看見鄰居屋頂正由 <span class="co">特斯拉</span> 安裝太陽能瓦片，搭配 <span class="co">台達電</span> 的能源管理系統儲存電力。遠方山丘上，<span class="co">西門子能源</span> 的巨型風機緩緩旋轉，把冬日海風轉化成零碳電力，正悄悄改變這座城市的耗能日常。</div></div></div></div>
+      <a class="look" href="#s2" style="display: block;">先看目前的思維鏈</a>
+      <div class="ai-note"><span class="tag">AI 生成</span>故事與提到的公司為 AI 依你的文字所做的聯想，可能有錯誤或遺漏，僅供參考，不構成任何投資建議或個股推薦。</div>
+    </div>
+    <aside class="pane-r">
+      <div class="pf"><div class="badge">你的投資組合</div>
+   <h3>從變暖的冬日走向綠色解答</h3>
+   <div class="sub">依 5 家故事公司・基金持股合計由高到低</div>
+   <div class="cobox"><div class="t">組合用到的公司<span>覺得不相關就按 ✕ 拿掉</span></div><div class="chips"><span class="chip " style="">迅銷<i data-co="迅銷">✕</i></span><span class="chip " style="">大金工業<i data-co="大金工業">✕</i></span><span class="chip " style="">特斯拉<i data-co="特斯拉">✕</i></span><span class="chip " style="">台達電<i data-co="台達電">✕</i></span><span class="chip " style="">西門子能源<i data-co="西門子能源">✕</i></span></div></div>
+   <div class="fund">
+      <div class="no">1</div>
+      <div><div class="nm">野村全球正向效應成長基金-季配型(台幣)(本基金配息來源可能為本金、非投資等級之高風險債券且基金之配息來源可能為本金)</div><div class="is">野村投信</div>
+        <div class="bar"><i style="width:58.10000000000001%"></i></div>
+        <div class="tg"><b>西門子能源</b> 8.3%</div></div>
+      <div class="pct"><strong>8.3%</strong><small>故事公司合計</small>
+        <button class="plus " data-k="f20野村全球正向效應成長基金-季配型(台幣)(本基金配息來源可能為本金、非投資等級之高風險債券且基金之配息來源可能為本金)">+</button></div>
+    </div><div class="fund">
+      <div class="no">2</div>
+      <div><div class="nm">摩根士丹利美國增長基金A(美元)</div><div class="is">MSIM基金管理(愛爾蘭)有限公司</div>
+        <div class="bar"><i style="width:57.39999999999999%"></i></div>
+        <div class="tg"><b>特斯拉</b> 8.2%</div></div>
+      <div class="pct"><strong>8.2%</strong><small>故事公司合計</small>
+        <button class="plus " data-k="f21摩根士丹利美國增長基金A(美元)">+</button></div>
+    </div><div class="fund">
+      <div class="no">3</div>
+      <div><div class="nm">摩根士丹利美國優勢基金A(美元)</div><div class="is">MSIM基金管理(愛爾蘭)有限公司</div>
+        <div class="bar"><i style="width:52.5%"></i></div>
+        <div class="tg"><b>特斯拉</b> 7.5%</div></div>
+      <div class="pct"><strong>7.5%</strong><small>故事公司合計</small>
+        <button class="plus " data-k="f22摩根士丹利美國優勢基金A(美元)">+</button></div>
+    </div>
+   <button class="join">一次加入清單（3 檔）</button>
+   <div class="more-list"><h5>也持有這些公司的基金<span>65 檔</span></h5><div class="mrow"><span class="n">摩根士丹利環球遠見基金A(美元)</span><span class="p">7.3%</span><button class="plus " data-k="m20">+</button></div><div class="mrow"><span class="n">法盛盧米斯賽勒斯美國成長股票基金</span><span class="p">7.0%</span><button class="plus " data-k="m21">+</button></div><div class="mrow"><span class="n">元大亞太成長基金</span><span class="p">6.8%</span><button class="plus " data-k="m22">+</button></div></div>
+   <div class="foot-note">每走一站都會把新故事的公司加進來重新排序。只表示基金持有這些公司，不代表適合你。</div></div>
+    </aside>
+  </section>
+  <section class="shell story stg" id="s3">
+    <div class="pane-l">
+      <h1>AI <span class="hl">幫你挖掘</span>生活情境下的潛在商機！</h1>
+      <div class="trip-head"><b>你的思維旅程</b><span class="r"><span>3</span> / 10 ・ <a class="restart" href="#home">↻ 重新問一句</a></span></div>
+      <div class="mapbox"><svg viewBox="0 0 916 204" preserveAspectRatio="none"><path d="M56,103 C160,103 160,103 264,103" fill="none" stroke="#1b1b1b" stroke-width="4.5" stroke-linecap="round"></path><path d="M264,103 C364,103 364,136 464,136" fill="none" stroke="#1b1b1b" stroke-width="4.5" stroke-linecap="round"></path><path d="M464,136 C564.5,136 564.5,155 665,155" fill="none" stroke="#1b1b1b" stroke-width="4.5" stroke-linecap="round"></path><path d="M264,103 Q322,54 350,70" fill="none" stroke="#b9b09b" stroke-width="2" stroke-dasharray="5 4"></path><text x="380" y="60" font-size="12" fill="#a99f88" font-weight="700" text-anchor="middle">乾脆去避暑</text><path d="M464,136 Q512,92 530,108" fill="none" stroke="#b9b09b" stroke-width="2" stroke-dasharray="5 4"></path><text x="560" y="98" font-size="12" fill="#a99f88" font-weight="700" text-anchor="middle">乾淨移動潮</text><path d="M679,155 Q723.5,155 774,112" fill="none" stroke="#D8212B" stroke-width="2" stroke-dasharray="6 4"></path><text x="782" y="117" font-size="14" font-weight="900" fill="#C8101E">← 儲存多餘綠電</text><path d="M679,155 Q723.5,155 774,191" fill="none" stroke="#D8212B" stroke-width="2" stroke-dasharray="6 4"></path><text x="782" y="196" font-size="14" font-weight="900" fill="#C8101E">→ 吃電怪獸中心</text><rect x="36" y="92" width="40" height="22" rx="11" fill="#9DF0C5" stroke="#1b1b1b" stroke-width="2"></rect><text x="56" y="107.5" font-size="11.5" font-weight="900" text-anchor="middle">起點</text><circle cx="264" cy="103" r="12" fill="#FFF4DB" stroke="#1b1b1b" stroke-width="2.5"></circle><text x="264" y="107.5" font-size="11" font-weight="900" text-anchor="middle">1</text><circle cx="464" cy="136" r="12" fill="#FFF4DB" stroke="#1b1b1b" stroke-width="2.5"></circle><text x="464" y="140.5" font-size="11" font-weight="900" text-anchor="middle">2</text><circle cx="665" cy="155" r="17" fill="#FFD84D" stroke="#1b1b1b" stroke-width="2.5"></circle><text x="665" y="159.5" font-size="13" font-weight="900" text-anchor="middle">3</text><text x="56" y="137" font-size="13.5" font-weight="900" fill="#1b1b1b" text-anchor="middle">冬天越來越不冷了</text><text x="264" y="137" font-size="13.5" font-weight="900" fill="#1b1b1b" text-anchor="middle">暖冬現象的生活改變</text><text x="464" y="174" font-size="13.5" font-weight="900" fill="#1b1b1b" text-anchor="middle">對抗暖化的綠能解方</text><text x="665" y="190" font-size="13.5" font-weight="900" fill="#1b1b1b" text-anchor="middle">電網升級與電力傳輸</text><text x="365" y="100" font-size="12" font-weight="500" fill="#555" text-anchor="middle">氣候變遷背後</text><text x="560" y="125" font-size="12" font-weight="500" fill="#555" text-anchor="middle">智慧電網骨幹</text></svg></div>
+      <div class="ask-line">接下來想往哪走？<span class="hl">把故事卡往左或往右拖</span>，後面那張就是你要走的路</div>
+      <div class="hist"><div class="strip" style="width:100%"><span><small>第 1 張</small>　暖冬現象的生活改變</span><em>選了「氣候變遷背後」</em></div><div class="strip" style="width:99.2%"><span><small>第 2 張</small>　對抗暖化的綠能解方</span><em>選了「智慧電網骨幹」</em></div></div>
+      <div class="deck" style="height: 330px;"><a class="card-side cs-l" href="#s3"><div class="tx"><div class="arrow">←</div><div class="swipe">往左滑</div><h4>儲存多餘綠電</h4><p>白天用不完的曝光與風，該怎麼存到夜晚？</p></div></a>
+   <a class="card-side cs-r" href="#s3"><div class="tx"><div class="arrow">→</div><div class="swipe">往右滑</div><h4>吃電怪獸中心</h4><p>電網穩定之後，海量電力到底都被誰用掉了？</p></div></a>
+   <div class="main-card"><div class="hd"><span>第 3 / 10 張</span><span>電網升級與電力傳輸</span></div>
+    <div class="bd"><h3>電流的無聲遷徙</h3>
+     <div class="legend"><span class="m">螢光標記</span>有基金持有，會算進組合<span class="d">虛線</span>目前沒有基金持有</div>
+     <div class="story-text">即使是暖冬，夜裡家家戶戶的空調依然運轉。你打開開關，風力發電機產生的電能穿過高壓輸電線，變電所裡 <span class="co nof">士電</span> 的巨大變壓器正全力降壓調節。電流流過 <span class="co nof">華新</span> 鋪設的超高壓電纜，再由 <span class="co">施耐德電機</span> 的配電盤智慧分流，最後透過 <span class="co">伊頓</span> 的不斷電系統，穩定無虞地照亮你的客廳。</div></div></div></div>
+      <a class="look" href="#s3" style="display: block;">先看目前的思維鏈</a>
+      <div class="ai-note"><span class="tag">AI 生成</span>故事與提到的公司為 AI 依你的文字所做的聯想，可能有錯誤或遺漏，僅供參考，不構成任何投資建議或個股推薦。</div>
+    </div>
+    <aside class="pane-r">
+      <div class="pf"><div class="badge">你的投資組合</div>
+   <h3>從氣候微溫走向綠電新動脈</h3>
+   <div class="sub">依 7 家故事公司・基金持股合計由高到低</div>
+   <div class="cobox"><div class="t">組合用到的公司<span>覺得不相關就按 ✕ 拿掉</span></div><div class="chips"><span class="chip " style="">迅銷<i data-co="迅銷">✕</i></span><span class="chip " style="">大金工業<i data-co="大金工業">✕</i></span><span class="chip " style="">特斯拉<i data-co="特斯拉">✕</i></span><span class="chip " style="">台達電<i data-co="台達電">✕</i></span><span class="chip " style="">西門子能源<i data-co="西門子能源">✕</i></span><span class="chip " style="">施耐德電機<i data-co="施耐德電機">✕</i></span><span class="chip " style="">伊頓<i data-co="伊頓">✕</i></span></div></div>
+   <div class="fund">
+      <div class="no">1</div>
+      <div><div class="nm">玉山全球生態友善ESG多重資產基金-月配息型(人民幣)(本基金有相當比重投資於非投資等級之高風險債券且基金之配息來源可能為本金)</div><div class="is">玉山投信</div>
+        <div class="bar"><i style="width:60.89999999999999%"></i></div>
+        <div class="tg"><b>特斯拉</b> 4.5%・<b>施耐德電機</b> 1.8%・<b>台達電</b> 1.4%・另 1 家</div></div>
+      <div class="pct"><strong>8.7%</strong><small>故事公司合計</small>
+        <button class="plus " data-k="f30玉山全球生態友善ESG多重資產基金-月配息型(人民幣)(本基金有相當比重投資於非投資等級之高風險債券且基金之配息來源可能為本金)">+</button></div>
+    </div><div class="fund">
+      <div class="no">2</div>
+      <div><div class="nm">野村全球正向效應成長基金-季配型(台幣)(本基金配息來源可能為本金、非投資等級之高風險債券且基金之配息來源可能為本金)</div><div class="is">野村投信</div>
+        <div class="bar"><i style="width:58.10000000000001%"></i></div>
+        <div class="tg"><b>西門子能源</b> 8.3%</div></div>
+      <div class="pct"><strong>8.3%</strong><small>故事公司合計</small>
+        <button class="plus " data-k="f31野村全球正向效應成長基金-季配型(台幣)(本基金配息來源可能為本金、非投資等級之高風險債券且基金之配息來源可能為本金)">+</button></div>
+    </div><div class="fund">
+      <div class="no">3</div>
+      <div><div class="nm">摩根士丹利美國增長基金A(美元)</div><div class="is">MSIM基金管理(愛爾蘭)有限公司</div>
+        <div class="bar"><i style="width:57.39999999999999%"></i></div>
+        <div class="tg"><b>特斯拉</b> 8.2%</div></div>
+      <div class="pct"><strong>8.2%</strong><small>故事公司合計</small>
+        <button class="plus " data-k="f32摩根士丹利美國增長基金A(美元)">+</button></div>
+    </div>
+   <button class="join">一次加入清單（3 檔）</button>
+   <div class="more-list"><h5>也持有這些公司的基金<span>69 檔</span></h5><div class="mrow"><span class="n">摩根士丹利美國優勢基金A(美元)</span><span class="p">7.5%</span><button class="plus " data-k="m30">+</button></div><div class="mrow"><span class="n">統一全球智聯網AIoT基金(人民幣)</span><span class="p">3.6%</span><button class="plus " data-k="m31">+</button></div><div class="mrow"><span class="n">統一統信基金</span><span class="p">3.6%</span><button class="plus " data-k="m32">+</button></div><div class="mrow"><span class="n">統一台灣動力基金-A類型</span><span class="p">3.5%</span><button class="plus " data-k="m33">+</button></div><div class="mrow"><span class="n">台新彭博美國成長指數基金(台幣)</span><span class="p">3.4%</span><button class="plus " data-k="m34">+</button></div><div class="mrow"><span class="n">統一黑馬基金</span><span class="p">3.4%</span><button class="plus " data-k="m35">+</button></div><div class="mrow"><span class="n">統一全球動態多重資產基金-月配型(…</span><span class="p">3.4%</span><button class="plus " data-k="m36">+</button></div><div class="mrow"><span class="n">元大二○○一基金</span><span class="p">3.2%</span><button class="plus " data-k="m37">+</button></div><div class="mrow"><span class="n">元大多福基金A不配息(台幣)</span><span class="p">3.2%</span><button class="plus " data-k="m38">+</button></div><div class="mrow"><span class="n">元大台灣加權股價指數基金A不配息…</span><span class="p">3.1%</span><button class="plus " data-k="m39">+</button></div><div class="mrow"><span class="n">玉山大中華基金(人民幣)</span><span class="p">2.9%</span><button class="plus " data-k="m310">+</button></div><div class="mrow"><span class="n">台新ESG環保愛地球成長基金-A不…</span><span class="p">2.9%</span><button class="plus " data-k="m311">+</button></div><div class="mrow"><span class="n">元大卓越基金A不配息(台幣)</span><span class="p">2.9%</span><button class="plus " data-k="m312">+</button></div><div class="mrow"><span class="n">台新高股息平衡基金-B配息(本基金…</span><span class="p">2.9%</span><button class="plus " data-k="m313">+</button></div><div class="mrow"><span class="n">國泰大中華基金</span><span class="p">2.9%</span><button class="plus " data-k="m314">+</button></div><div class="mrow"><span class="n">摩根士丹利亞洲股票基金A(美元)(…</span><span class="p">2.8%</span><button class="plus " data-k="m315">+</button></div><div class="mrow"><span class="n">元大全球優質龍頭平衡基金A不配息…</span><span class="p">2.6%</span><button class="plus " data-k="m316">+</button></div><div class="mrow"><span class="n">玉山金平衡基金-A累積型(本基金有…</span><span class="p">2.6%</span><button class="plus " data-k="m317">+</button></div></div>
+   <div class="foot-note">每走一站都會把新故事的公司加進來重新排序。只表示基金持有這些公司，不代表適合你。</div></div>
+    </aside>
+  </section>
+  <div class="crumb" id="crumb">首頁 › 找基金</div>
+  <!-- ===== HOME ===== -->
+  <section id="home">
+    <div class="shell hero" id="hero">
+      <h1>AI <span class="hl">幫你挖掘</span>生活情境下的潛在商機！</h1>
+      <h2>最近有什麼事讓你<span class="hl purple">特別在意</span>？</h2>
+      <p class="sub">抓一句丟進口袋，或自己寫一句</p>
+      <div><a class="bubble y" href="#s1" style="left:360px;top:194px;--r:-8deg;transform:translate(-50%,-50%) rotate(-8deg)">我覺得 AI 會越來越紅</a><a class="bubble m" href="#s1" style="left:560px;top:225px;--r:4deg;transform:translate(-50%,-50%) rotate(4deg)">最近大家都在打減肥針</a><a class="bubble b" href="#s1" style="left:759px;top:193px;--r:-4deg;transform:translate(-50%,-50%) rotate(-4deg)">怕熱，夏天越來越熱</a><a class="bubble l" href="#s1" style="left:973px;top:231px;--r:5deg;transform:translate(-50%,-50%) rotate(5deg)">台積電一直漲我有沒有跟到</a><a class="bubble y" href="#s1" style="left:618px;top:291px;--r:3deg;transform:translate(-50%,-50%) rotate(3deg)">想投資運動相關的公司</a><a class="bubble m" href="#s1" style="left:779px;top:324px;--r:-3deg;transform:translate(-50%,-50%) rotate(-3deg)">今天好累</a></div>
+      <button class="shuffle"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="3"><path d="M20 12a8 8 0 1 1-2.5-5.8"/><path d="M20 3v5h-5"/></svg>換一批</button>
+      <!-- 吉祥物：設計稿中為點陣圖，這裡是示意版，請替換為正式素材 -->
+      <svg class="mascot" viewBox="0 0 200 200" aria-label="口袋吉祥物">
+        <path d="M60 60 L72 38 L92 56 L112 56 L132 38 L146 62 Q152 100 140 138 L64 140 Q50 100 60 60Z" fill="#F9B77B" stroke="#1b1b1b" stroke-width="3"/>
+        <path d="M60 112 Q100 134 144 112 L150 152 Q100 176 56 150Z" fill="#D8212B" stroke="#1b1b1b" stroke-width="3"/>
+        <circle cx="88" cy="84" r="3.5" fill="#1b1b1b"/><circle cx="116" cy="84" r="3.5" fill="#1b1b1b"/>
+        <ellipse cx="98" cy="94" rx="5" ry="3.5" fill="#1b1b1b"/><path d="M92 100 Q98 106 104 100" stroke="#1b1b1b" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <ellipse cx="76" cy="96" rx="8" ry="5" fill="#F58DA3"/><ellipse cx="128" cy="96" rx="8" ry="5" fill="#F58DA3"/>
+        <path d="M70 156 L62 184 L88 184" fill="#D8212B" stroke="#1b1b1b" stroke-width="3"/><path d="M118 160 L126 186 L150 180" fill="#D8212B" stroke="#1b1b1b" stroke-width="3"/>
+      </svg>
+      <div class="hint">拖進來，或點一下</div>
+      <div class="ask">
+        <input id="askInput" type="text" placeholder="自己寫一句，例如：我覺得 AI 會越來越紅">
+        <a class="go" href="#s1">丟進口袋</a>
+    </div>
+    </div>
+
+    <div class="sec-head">
+      <div class="ic"><svg width="20" height="22" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.2"><path d="M12 3c1 4 6 6 6 12a6 6 0 0 1-12 0c0-3 2-4 2-7 2 1 3 2 4-5z"/></svg></div>
+      <h3>規模最大的基金</h3><span class="meta">依基金規模排・302 檔</span>
+      <button class="more">查看更多 ›</button>
+    </div>
+    <div class="fund-row">
+      <div class="fund-card"><b>富達基金-日本價值基金(A股累計美元避險)</b><div class="iss">富達基金管理有限公司・<span class="rr">RR4</span></div></div>
+      <div class="fund-card"><b>元大台灣卓越50ETF連結基金A不配息(台幣)</b><div class="iss">元大投信・<span class="rr">RR4</span></div></div>
+      <div class="fund-card"><b>統一奔騰基金</b><div class="iss" style="margin-top:34px">統一投信・<span class="rr">RR5</span></div></div>
+      <div class="fund-card"><b>路博邁投資基金-NB日本股票基金A累積類股(日圓)</b><div class="iss">路博邁資產管理愛爾蘭有限公司・</div></div>
+      <div class="fund-card"><b>元大台灣高股息優質龍頭基金A不配息(本基金之配息來源可能</b><div class="iss">元大投信・<span class="rr">RR4</span></div></div>
+      <div class="fund-card"><b>富達基金-全球科技基金A股累計</b><div class="iss">富達基金管理有限公司・</div></div>
+    </div>
+  </section>
+
+</div>
+
+</body>
+</html>
