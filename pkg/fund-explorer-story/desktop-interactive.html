@@ -195,9 +195,48 @@ body:not([data-stage="0"]) #home{display:none;}
 .mrow .n{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .mrow .p{color:var(--red-text);font-weight:900;min-width:34px;text-align:right;}
 .mrow .plus{width:22px;height:22px;font-size:15px;line-height:16px;}
+
+/* ===== 依錄影調整 ===== */
+.hero{height:664px}
+.hero h1,.hero h2{font-weight:800}
+.bubble{font-size:13px;padding:7px 15px;font-weight:700}
+.shuffle{top:323px}.mascot{top:444px}.hint{top:551px}.ask{top:583px}
+.bubble{animation:bob 4.2s ease-in-out infinite}
+.bubble:nth-child(2n){animation-delay:-1.4s}.bubble:nth-child(3n){animation-delay:-2.6s}
+@keyframes bob{0%,100%{margin-top:0}50%{margin-top:-4px}}
+.bubble:hover{animation:none}
+.shell.story{height:calc(100vh - 150px);min-height:640px;overflow:hidden;grid-template-rows:minmax(0,1fr)}
+.shell.story .pane-l{min-height:0;height:100%;overflow-y:auto}
+.shell.story .pane-r{height:100%;overflow-y:auto}
+.card-side.cs-l:hover,.card-side.cs-r:hover{background:#FFD85A repeating-linear-gradient(135deg,rgba(255,255,255,.3) 0 5px,transparent 5px 10px)}
+.card-side.ph{background:#fff;border:2px dashed #a9a9a9;box-shadow:none;cursor:default;transform:rotate(-5deg)}
+.card-side.ph.cs-r{transform:rotate(5deg)}
+.card-side.ph:hover{background:#fff;transform:rotate(-5deg)}
+.card-side.ph.cs-r:hover{transform:rotate(5deg)}
+.card-side.ph .swipe{margin-top:34px}
+.card-side.ph .dots{font-size:20px;letter-spacing:2px;color:#777;margin-top:4px}
+.card-side.ph p{color:#777}
+.card-side.cs-r.ph .tx{text-align:right}
+.main-card .wr{color:var(--red-text);font-weight:900;font-size:13px;margin-bottom:12px}
+.sk{height:13px;background:#F9E9B4;border-radius:7px;margin-top:11px}
+.hear{font-size:11.5px;color:#666;margin-top:24px}
+.cur{font-weight:400;animation:blink 1s steps(1) infinite;margin-left:1px}
+@keyframes blink{50%{opacity:0}}
+.pf .gray{color:#9a9a9a}
+.pf .wait{color:var(--red-text);font-size:11px;font-weight:900;text-align:center;margin-top:12px;padding:0 6px}
+.skf{border:2px dashed #cfc7b4;border-radius:13px;margin-top:10px;padding:12px;background:#fff}
+.skf i{display:block;height:9px;border-radius:5px;background:#F6D9DB;margin-bottom:9px}.skf i:nth-child(2){width:60%}.skf i:nth-child(3){width:30%;margin-bottom:0}
+.plus.on{background:#6FD79F;color:#1b1b1b}
+.join.done{background:#E8E4DB;color:#777;border-color:#9b978d;box-shadow:none;cursor:not-allowed}
+.nav .cart{position:relative}
+.cartBadge{position:absolute;top:-8px;left:-6px;min-width:15px;height:15px;border-radius:8px;background:var(--red);color:#fff;font-size:10px;font-weight:700;display:none;place-items:center;padding:0 3px}
+.toast{position:fixed;left:50%;bottom:36px;transform:translateX(-50%);background:#1b1b1b;color:#fff;padding:11px 24px;border-radius:999px;font-weight:700;font-size:14px;z-index:99;opacity:0;transition:opacity .25s;pointer-events:none}
+.toast.show{opacity:1}
+.mapbox svg path.branch{transition:opacity .2s}
 </style>
 </head>
 <body data-stage="0">
+<div class="toast" id="toast"></div>
 
 <div class="proto">
   <div>基金 Explorer・故事旅程版 prototype</div>
@@ -214,7 +253,7 @@ body:not([data-stage="0"]) #home{display:none;}
   </div>
   <div class="links"><a href="#">買基金</a><a href="#">買策略</a><a href="#">關於我們</a><a href="#">客服中心</a></div>
   <div class="nav-r">
-    <div class="cart"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#222" stroke-width="2"><path d="M2 3h3l2.5 12h11L21 7H6"/><circle cx="9" cy="20" r="1.6"/><circle cx="18" cy="20" r="1.6"/></svg>購物車</div>
+    <div class="cart"><em class="cartBadge" id="cartBadge"></em><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#222" stroke-width="2"><path d="M2 3h3l2.5 12h11L21 7H6"/><circle cx="9" cy="20" r="1.6"/><circle cx="18" cy="20" r="1.6"/></svg>購物車</div>
     <button class="btn-open"><svg width="17" height="17" viewBox="0 0 24 24" fill="#fff"><path d="M6 3h12l4 6-10 12L2 9z"/></svg>開戶</button>
     <button class="btn-login">登入</button>
   </div>
@@ -229,7 +268,7 @@ body:not([data-stage="0"]) #home{display:none;}
       <h1>AI <span class="hl">幫你挖掘</span>生活情境下的潛在商機！</h1>
       <h2>最近有什麼事讓你<span class="hl purple">特別在意</span>？</h2>
       <p class="sub">抓一句丟進口袋，或自己寫一句</p>
-      <div id="bubbles"><div class="bubble y" style="left:360px;top:194px;--r:-8deg;transform:translate(-50%,-50%) rotate(-8deg)">我覺得 AI 會越來越紅</div><div class="bubble m" style="left:560px;top:225px;--r:4deg;transform:translate(-50%,-50%) rotate(4deg)">最近大家都在打減肥針</div><div class="bubble b" style="left:759px;top:193px;--r:-4deg;transform:translate(-50%,-50%) rotate(-4deg)">怕熱，夏天越來越熱</div><div class="bubble l" style="left:973px;top:231px;--r:5deg;transform:translate(-50%,-50%) rotate(5deg)">台積電一直漲我有沒有跟到</div><div class="bubble y" style="left:618px;top:291px;--r:3deg;transform:translate(-50%,-50%) rotate(3deg)">想投資運動相關的公司</div><div class="bubble m" style="left:779px;top:324px;--r:-3deg;transform:translate(-50%,-50%) rotate(-3deg)">今天好累</div></div>
+      <div id="bubbles"><div class="bubble y" style="left:28.7%;top:201px;--r:-6deg;transform:translate(-50%,-50%) rotate(-6deg)">冬天越來越不冷了</div><div class="bubble m" style="left:37.1%;top:237px;--r:3deg;transform:translate(-50%,-50%) rotate(3deg)">最近睡不好</div><div class="bubble b" style="left:45.5%;top:207px;--r:-3deg;transform:translate(-50%,-50%) rotate(-3deg)">想存一筆退休金</div><div class="bubble l" style="left:54.8%;top:243px;--r:-5deg;transform:translate(-50%,-50%) rotate(-5deg)">手機又該換新的了</div><div class="bubble y" style="left:63.5%;top:207px;--r:3deg;transform:translate(-50%,-50%) rotate(3deg)">想支持綠能</div><div class="bubble m" style="left:71.7%;top:237px;--r:3deg;transform:translate(-50%,-50%) rotate(3deg)">開始跑馬拉松了</div></div>
       <button class="shuffle" id="shuffle"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="3"><path d="M20 12a8 8 0 1 1-2.5-5.8"/><path d="M20 3v5h-5"/></svg>換一批</button>
       <!-- 吉祥物：設計稿中為點陣圖，這裡是示意版，請替換為正式素材 -->
       <svg class="mascot" viewBox="0 0 200 200" aria-label="口袋吉祥物">
@@ -283,12 +322,12 @@ body:not([data-stage="0"]) #home{display:none;}
 <script>
 /* ---------- data (讀自設計稿畫面) ---------- */
 const BUBBLES=[
-  {t:'我覺得 AI 會越來越紅',c:'y',r:-8,x:360,y:194},
-  {t:'最近大家都在打減肥針',c:'m',r:4,x:560,y:225},
-  {t:'怕熱，夏天越來越熱',c:'b',r:-4,x:759,y:193},
-  {t:'台積電一直漲我有沒有跟到',c:'l',r:5,x:973,y:231},
-  {t:'想投資運動相關的公司',c:'y',r:3,x:618,y:291},
-  {t:'今天好累',c:'m',r:-3,x:779,y:324},
+  {t:'冬天越來越不冷了',c:'y',r:-6,x:28.7,y:201},
+  {t:'最近睡不好',c:'m',r:3,x:37.1,y:237},
+  {t:'想存一筆退休金',c:'b',r:-3,x:45.5,y:207},
+  {t:'手機又該換新的了',c:'l',r:-5,x:54.8,y:243},
+  {t:'想支持綠能',c:'y',r:3,x:63.5,y:207},
+  {t:'開始跑馬拉松了',c:'m',r:3,x:71.7,y:237},
 ];
 const START='冬天越來越不冷了';
 
@@ -356,14 +395,14 @@ function setStage(n){
   stage=n; removed=new Set();
   document.body.dataset.stage=n;
   $('#crumb').classList.toggle('hidden',n>0);
-  if(n===0){renderBubbles();window.scrollTo(0,0);return;}
-  renderStory();
+  if(n===0){token++;renderBubbles();window.scrollTo(0,0);return;}
+  showChapter(n);
 }
 
 /* ---------- home ---------- */
 function renderBubbles(){
   $('#bubbles').innerHTML=BUBBLES.map((b,i)=>
-   `<div class="bubble ${b.c}" style="left:${b.x}px;top:${b.y}px;--r:${b.r}deg;transform:translate(-50%,-50%) rotate(${b.r}deg)" data-i="${i}">${b.t}</div>`).join('');
+   `<div class="bubble ${b.c}" style="left:${b.x}%;top:${b.y}px;--r:${b.r}deg;transform:translate(-50%,-50%) rotate(${b.r}deg)" data-i="${i}">${b.t}</div>`).join('');
   document.querySelectorAll('.bubble').forEach(el=>el.onclick=()=>setStage(1));
 }
 $('#shuffle').onclick=()=>{
@@ -375,8 +414,9 @@ $('#shuffle').onclick=()=>{
 $('#askForm').onsubmit=e=>{e.preventDefault();setStage(1);};
 
 /* ---------- story ---------- */
-function mapSVG(n){
+function mapSVG(n,o={}){
   const m=MAP[n];
+  const pend=!!o.pending, hl=o.hl||null;
   let s='';
   const P=i=>m.nodes[i];
   // edges
@@ -385,17 +425,20 @@ function mapSVG(n){
     const mx=(x1+x2)/2;
     s+=`<path d="M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}" fill="none" stroke="#1b1b1b" stroke-width="4.5" stroke-linecap="round"/>`;
   });
-  (m.ghost||[]).forEach(([f,x,y,t])=>{
+  (pend?[]:(m.ghost||[])).forEach(([f,x,y,t])=>{
     const [x1,y1]=P(f);
     s+=`<path d="M${x1},${y1} Q${(x1+x)/2},${y-6} ${x-30},${y+10}" fill="none" stroke="#b9b09b" stroke-width="2" stroke-dasharray="5 4"/>`;
     s+=`<text x="${x}" y="${y}" font-size="12" fill="#a99f88" font-weight="700" text-anchor="middle">${t}</text>`;
   });
-  m.branches.forEach(([f,x,y,t])=>{
+  if(!pend) m.branches.forEach(([f,x,y,t],bi)=>{
     const [x1,y1]=P(f);
-    s+=`<path d="M${x1+14},${y1} Q${(x1+x)/2},${y1} ${x-8},${y}" fill="none" stroke="#D8212B" stroke-width="2" stroke-dasharray="6 4"/>`;
-    s+=`<text x="${x}" y="${y+5}" font-size="14" font-weight="900" fill="#C8101E">${t}</text>`;
+    const side=bi===0?'l':'r';
+    const on=hl===side, off=hl&&!on;
+    s+=`<path class="branch" d="M${x1+14},${y1} Q${(x1+x)/2},${y1} ${x-8},${y}" fill="none" stroke="${off?'#E7B5B5':'#D8212B'}" stroke-width="${on?4:2}" ${on?'':'stroke-dasharray="6 4"'}/>`;
+    s+=`<text x="${x}" y="${y+5}" font-size="14" font-weight="900" fill="${off?'#E2AAAA':'#C8101E'}">${t}</text>`;
   });
   m.nodes.forEach(([x,y,k])=>{
+    if(pend&&k===n){s+=`<circle cx="${x}" cy="${y}" r="17" fill="#FFF4DB" stroke="#b9a770" stroke-width="2.5" stroke-dasharray="4 3"/><text x="${x}" y="${y+5}" font-size="14" font-weight="900" text-anchor="middle" fill="#8a7a40">…</text>`;return;}
     if(k==='start') s+=`<rect x="${x-20}" y="${y-11}" width="40" height="22" rx="11" fill="#9DF0C5" stroke="#1b1b1b" stroke-width="2"/><text x="${x}" y="${y+4.5}" font-size="11.5" font-weight="900" text-anchor="middle">起點</text>`;
     else{
       const cur=(k===n), r=cur?17:12;
@@ -403,21 +446,28 @@ function mapSVG(n){
     }
   });
   m.labels.forEach(([x,y,t,k])=>{
+    if(pend&&k==='n'&&Math.abs(x-m.nodes[n][0])<2) return;
     const bold=k==='n';
     s+=`<text x="${x}" y="${y}" font-size="${bold?13.5:12}" font-weight="${bold?900:500}" fill="${bold?'#1b1b1b':'#555'}" text-anchor="middle">${t}</text>`;
   });
   return s;
 }
 
-function pfHTML(c){
-  const p=c.pf;
-  const rows=p.funds.map(f=>{
+
+const fkey=(c,f)=>'f'+c.no+f.n;
+let cart=0, token=0;
+function setCart(n){cart=Math.max(0,n);const b=$('#cartBadge');b.textContent=cart;b.style.display=cart?'grid':'none';}
+function rowsOf(c){
+  return c.pf.funds.map(f=>{
     const cos=Object.entries(f.co).filter(([k])=>!removed.has(k));
     return {...f,cos,total:cos.reduce((a,[,v])=>a+v,0)};
   }).filter(f=>f.total>0).sort((a,b)=>b.total-a.total);
+}
+function pfHTML(c){
+  const p=c.pf, rows=rowsOf(c);
   const fundHTML=rows.map((f,i)=>{
-    const tags=f.cos.map(([k,v])=>k.startsWith('另')?`${k}`:`<b>${k}</b> ${v}%`).join('・');
-    const key='f'+c.no+i+f.n;
+    const tags=f.cos.map(([k,v])=>k.startsWith('另')?`${k}`:`<b>${k}</b> ${v.toFixed(1)}%`).join('・');
+    const key=fkey(c,f);
     return `<div class="fund">
       <div class="no">${i+1}</div>
       <div><div class="nm">${f.n}</div><div class="is">${f.i}</div>
@@ -426,8 +476,9 @@ function pfHTML(c){
       <div class="pct"><strong>${f.total.toFixed(1)}%</strong><small>故事公司合計</small>
         <button class="plus ${joined.has(key)?'on':''}" data-k="${key}">${joined.has(key)?'✓':'+'}</button></div>
     </div>`;}).join('');
-  const chips=p.chips.map(x=>`<span class="chip ${removed.has(x)?'':''}" style="${removed.has(x)?'display:none':''}">${x}<i data-co="${x}">✕</i></span>`).join('');
+  const chips=p.chips.map(x=>`<span class="chip" style="${removed.has(x)?'display:none':''}">${x}<i data-co="${x}">✕</i></span>`).join('');
   const left=p.chips.filter(x=>!removed.has(x)).length;
+  const allIn=rows.length&&rows.every(f=>joined.has(fkey(c,f)));
   let more='';
   if(p.more){
     more=`<div class="more-list"><h5>也持有這些公司的基金<span>${p.more.count} 檔</span></h5>`+
@@ -438,47 +489,88 @@ function pfHTML(c){
    <div class="sub">依 ${left} 家故事公司・基金持股合計由高到低</div>
    <div class="cobox"><div class="t">組合用到的公司<span>覺得不相關就按 ✕ 拿掉</span></div><div class="chips">${chips}</div></div>
    ${fundHTML}
-   <button class="join" id="joinAll">一次加入清單（${rows.length} 檔）</button>
+   ${allIn?'<button class="join done" id="joinAll" disabled>✓ 已全部加入清單</button>':`<button class="join" id="joinAll">一次加入清單（${rows.length} 檔）</button>`}
    ${more}
    <div class="foot-note">每走一站都會把新故事的公司加進來重新排序。只表示基金持有這些公司，不代表適合你。</div>`;
 }
-
-function deckHTML(c){
+function pfSkeleton(){
+  return `<div class="badge">你的投資組合</div><h3 class="gray">你的投資組合</h3>
+   <div class="sub">跟著你的故事長出來</div>
+   <div class="wait">AI 寫出公司後，馬上比對持有這些公司的基金…</div>
+   <div class="skf"><i></i><i></i><i></i></div><div class="skf"><i></i><i></i><i></i></div><div class="skf"><i></i><i></i><i></i></div>
+   <div class="foot-note">每走一站都會把新故事的公司加進來重新排序。只表示基金持有這些公司，不代表適合你。</div>`;
+}
+function sideHTML(c,ready){
+  if(!ready) return `<div class="card-side cs-l ph"><div class="tx"><div class="swipe">← 往左</div><div class="dots">…</div><p>故事寫完就出現</p></div></div>
+   <div class="card-side cs-r ph"><div class="tx"><div class="swipe">往右 →</div><div class="dots">…</div><p>故事寫完就出現</p></div></div>`;
   return `<div class="card-side cs-l" data-go="left"><div class="tx"><div class="arrow">←</div><div class="swipe">往左滑</div><h4>${c.left.t}</h4><p>${c.left.d}</p></div></div>
-   <div class="card-side cs-r" data-go="right"><div class="tx"><div class="arrow">→</div><div class="swipe">往右滑</div><h4>${c.right.t}</h4><p>${c.right.d}</p></div></div>
-   <div class="main-card"><div class="hd"><span>第 ${c.no} / 10 張</span><span>${c.node}</span></div>
-    <div class="bd"><h3>${c.title}</h3>
-     <div class="legend"><span class="m">螢光標記</span>有基金持有，會算進組合<span class="d">虛線</span>目前沒有基金持有</div>
-     <div class="story-text">${c.body}</div></div></div>`;
+   <div class="card-side cs-r" data-go="right"><div class="tx"><div class="arrow">→</div><div class="swipe">往右滑</div><h4>${c.right.t}</h4><p>${c.right.d}</p></div></div>`;
 }
-
-function renderStory(){
-  const c=CH[stage];
-  $('#stepNo').textContent=stage;
-  $('#map').innerHTML=mapSVG(stage);
-  $('#hist').innerHTML=(c.hist||[]).map((h,i)=>`<div class="strip" style="width:${100-(i*0.8)}%"><span><small>第 ${h.n} 張</small>　${h.t}</span><em>選了「${h.pick}」</em></div>`).join('');
-  $('#deck').innerHTML=deckHTML(c);
-  $('#deck').style.height=(stage===1?318:stage===2?318:330)+'px';
-  $('#lookChain').style.display=stage>1?'block':'none';
-  $('#pf').innerHTML=pfHTML(c);
-  bindPF();
-  document.querySelectorAll('[data-go]').forEach(el=>el.onclick=()=>{ if(stage<3) setStage(stage+1); else flash('設計稿到第 3 張為止'); });
-  window.scrollTo({top:0});
-}
-function bindPF(){
-  document.querySelectorAll('#pf .plus').forEach(b=>b.onclick=()=>{
-    const k=b.dataset.k; joined.has(k)?joined.delete(k):joined.add(k);
-    b.classList.toggle('on'); b.textContent=joined.has(k)?'✓':'+';
+const wait=(ms,t)=>new Promise(r=>setTimeout(()=>r(t===token),ms));
+function typeHTML(el,html,delay,t){
+  return new Promise(res=>{
+    let i=0;
+    const step=()=>{
+      if(t!==token) return res(false);
+      if(i>=html.length){el.innerHTML=html;return res(true);}
+      while(i<html.length&&html[i]==='<') i=html.indexOf('>',i)+1;
+      i++;
+      el.innerHTML=html.slice(0,i)+'<span class="cur">|</span>';
+      setTimeout(step,delay);
+    };
+    step();
   });
-  document.querySelectorAll('#pf .chip i').forEach(i=>i.onclick=()=>{removed.add(i.dataset.co);$('#pf').innerHTML=pfHTML(CH[stage]);bindPF();});
-  const j=$('#joinAll'); if(j) j.onclick=()=>flash('已加入清單');
 }
-function flash(t){
-  const d=document.createElement('div');
-  d.textContent=t;
-  d.style.cssText='position:fixed;left:50%;bottom:40px;transform:translateX(-50%);background:#1b1b1b;color:#fff;padding:10px 22px;border-radius:999px;font-weight:700;font-size:14px;z-index:99';
-  document.body.appendChild(d);setTimeout(()=>d.remove(),1400);
+function bindSides(){
+  document.querySelectorAll('[data-go]').forEach(el=>{
+    el.onclick=()=>{ if(stage<3) showChapter(stage+1); else toast('設計稿到第 3 張為止'); };
+    const side=el.dataset.go==='left'?'l':'r';
+    el.onmouseenter=()=>{$('#map').innerHTML=mapSVG(stage,{hl:side});};
+    el.onmouseleave=()=>{$('#map').innerHTML=mapSVG(stage);};
+  });
 }
+async function showChapter(n){
+  const t=++token, c=CH[n];
+  stage=n; document.body.dataset.stage=n; $('#crumb').classList.add('hidden');
+  if(n===1) removed=new Set();
+  $('#stepNo').textContent=n;
+  $('#map').innerHTML=mapSVG(n,{pending:true});
+  $('#hist').innerHTML=(c.hist||[]).map((h,i)=>`<div class="strip" style="width:${100-(i*0.8)}%"><span><small>第 ${h.n} 張</small>　${h.t}</span><em>選了「${h.pick}」</em></div>`).join('');
+  $('#lookChain').style.display=n>1?'block':'none';
+  $('#deck').style.height=(n===3?330:318)+'px';
+  $('#deck').innerHTML=sideHTML(c,false)+`<div class="main-card"><div class="hd"><span>第 ${n} / 10 張</span><span>AI 正在想…</span></div><div class="bd"><div class="wr">AI 正在寫第 ${n} 張故事，大約 5 秒</div><div class="sk" style="width:62%"></div><div class="sk" style="width:38%"></div><div class="sk"></div><div class="sk" style="width:80%"></div><div class="hear">聽你說了什麼</div></div></div>`;
+  $('#pf').innerHTML=pfSkeleton();
+  $('.pane-l').scrollTop=0; $('.pane-r').scrollTop=0;
+  if(!await wait(1200,t)) return;
+  const mc=$('#deck .main-card');
+  mc.innerHTML=`<div class="hd"><span>第 ${n} / 10 張</span><span>${c.node}</span></div><div class="bd"><h3 id="tt"></h3><div class="legend" id="lg" style="visibility:hidden"><span class="m">螢光標記</span>有基金持有，會算進組合<span class="d">虛線</span>目前沒有基金持有</div><div class="story-text" id="tx"></div></div>`;
+  if(!await typeHTML($('#tt'),c.title,38,t)) return;
+  $('#lg').style.visibility='visible';
+  if(!await typeHTML($('#tx'),c.body,16,t)) return;
+  $('#map').innerHTML=mapSVG(n);
+  $('#deck').insertAdjacentHTML('afterbegin',sideHTML(c,true));
+  document.querySelectorAll('#deck .card-side.ph').forEach(e=>e.remove());
+  bindSides();
+  $('#pf').innerHTML=pfHTML(c); bindPF();
+}
+function renderStory(){ showChapter(stage); }
+function bindPF(){
+  const c=CH[stage];
+  document.querySelectorAll('#pf .plus').forEach(b=>b.onclick=()=>{
+    const k=b.dataset.k; if(joined.has(k)){joined.delete(k);setCart(cart-1);}else{joined.add(k);setCart(cart+1);}
+    $('#pf').innerHTML=pfHTML(c);bindPF();
+  });
+  document.querySelectorAll('#pf .chip i').forEach(i=>i.onclick=()=>{removed.add(i.dataset.co);$('#pf').innerHTML=pfHTML(c);bindPF();});
+  const j=$('#joinAll'); if(j&&!j.disabled) j.onclick=()=>{
+    let add=0; rowsOf(c).forEach(f=>{const k=fkey(c,f); if(!joined.has(k)){joined.add(k);add++;}});
+    setCart(cart+add);
+    toast(`已加入清單，組名「${c.pf.title}」`);
+    $('#pf').innerHTML=pfHTML(c);bindPF();
+  };
+}
+let toastT;
+function toast(t){const d=$('#toast');d.textContent=t;d.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>d.classList.remove('show'),2200);}
+const flash=toast;
 $('#restart').onclick=()=>setStage(0);
 $('#lookChain').onclick=e=>{e.preventDefault();$('.mapbox').scrollIntoView({behavior:'smooth',block:'center'});};
 document.querySelectorAll('[data-seg]').forEach(g=>g.querySelectorAll('button').forEach(b=>b.onclick=()=>{g.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');}));
@@ -486,7 +578,7 @@ document.querySelectorAll('[data-seg]').forEach(g=>g.querySelectorAll('button').
 /* 左右滑動手勢 */
 let sx=null;
 document.addEventListener('pointerdown',e=>{ if(e.target.closest('.main-card')) sx=e.clientX; });
-document.addEventListener('pointerup',e=>{ if(sx!==null && Math.abs(e.clientX-sx)>60 && stage>0 && stage<3) setStage(stage+1); sx=null; });
+document.addEventListener('pointerup',e=>{ if(sx!==null && Math.abs(e.clientX-sx)>60 && stage>0 && stage<3) (document.querySelector('#deck .card-side:not(.ph)')&&showChapter(stage+1)); sx=null; });
 
 renderBubbles();
 </script>

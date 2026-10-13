@@ -205,6 +205,17 @@ body:not([data-stage="0"]) #home{display:none;}
 .ask .go{height:50px;width:105px;background:var(--red);color:#fff;font-weight:900;font-size:14.5px;border:2.5px solid var(--ink);border-radius:999px;box-shadow:3px 4px 0 var(--ink);display:grid;place-items:center;}
 a.card-side{display:block;color:inherit;}
 .restart{color:#333;text-decoration:underline;}
+
+/* ===== 依錄影調整 ===== */
+.hero{height:664px}
+.hero h1,.hero h2{font-weight:800}
+.bubble{font-size:13px;padding:7px 15px;font-weight:700;animation:bob 4.2s ease-in-out infinite}
+.bubble:nth-child(2n){animation-delay:-1.4s}.bubble:nth-child(3n){animation-delay:-2.6s}
+@keyframes bob{0%,100%{margin-top:0}50%{margin-top:-4px}}
+.bubble:hover{animation:none}
+.shuffle{top:323px}.mascot{top:444px}.hint{top:551px}.ask{top:583px}
+.card-side.cs-l:hover,.card-side.cs-r:hover{background:#FFD85A repeating-linear-gradient(135deg,rgba(255,255,255,.3) 0 5px,transparent 5px 10px)}
+.plus{transition:.12s}
 </style>
 </head>
 <body>
@@ -263,7 +274,7 @@ a.card-side{display:block;color:inherit;}
       <div class="no">2</div>
       <div><div class="nm">富達永續全球股票收益基金-A類型月配型(台幣)(本基金之配息來源可能為本金或收益平準金且並無保證收益及配息)</div><div class="is">富達投信</div>
         <div class="bar"><i style="width:14%"></i></div>
-        <div class="tg"><b>大金工業</b> 2%</div></div>
+        <div class="tg"><b>大金工業</b> 2.0%</div></div>
       <div class="pct"><strong>2.0%</strong><small>故事公司合計</small>
         <button class="plus " data-k="f11富達永續全球股票收益基金-A類型月配型(台幣)(本基金之配息來源可能為本金或收益平準金且並無保證收益及配息)">+</button></div>
     </div><div class="fund">
@@ -382,7 +393,7 @@ a.card-side{display:block;color:inherit;}
       <h1>AI <span class="hl">幫你挖掘</span>生活情境下的潛在商機！</h1>
       <h2>最近有什麼事讓你<span class="hl purple">特別在意</span>？</h2>
       <p class="sub">抓一句丟進口袋，或自己寫一句</p>
-      <div><a class="bubble y" href="#s1" style="left:360px;top:194px;--r:-8deg;transform:translate(-50%,-50%) rotate(-8deg)">我覺得 AI 會越來越紅</a><a class="bubble m" href="#s1" style="left:560px;top:225px;--r:4deg;transform:translate(-50%,-50%) rotate(4deg)">最近大家都在打減肥針</a><a class="bubble b" href="#s1" style="left:759px;top:193px;--r:-4deg;transform:translate(-50%,-50%) rotate(-4deg)">怕熱，夏天越來越熱</a><a class="bubble l" href="#s1" style="left:973px;top:231px;--r:5deg;transform:translate(-50%,-50%) rotate(5deg)">台積電一直漲我有沒有跟到</a><a class="bubble y" href="#s1" style="left:618px;top:291px;--r:3deg;transform:translate(-50%,-50%) rotate(3deg)">想投資運動相關的公司</a><a class="bubble m" href="#s1" style="left:779px;top:324px;--r:-3deg;transform:translate(-50%,-50%) rotate(-3deg)">今天好累</a></div>
+      <div><a class="bubble y" href="#s1" style="left:28.7%;top:201px;--r:-6deg;transform:translate(-50%,-50%) rotate(-6deg)">冬天越來越不冷了</a><a class="bubble m" href="#s1" style="left:37.1%;top:237px;--r:3deg;transform:translate(-50%,-50%) rotate(3deg)">最近睡不好</a><a class="bubble b" href="#s1" style="left:45.5%;top:207px;--r:-3deg;transform:translate(-50%,-50%) rotate(-3deg)">想存一筆退休金</a><a class="bubble l" href="#s1" style="left:54.8%;top:243px;--r:-5deg;transform:translate(-50%,-50%) rotate(-5deg)">手機又該換新的了</a><a class="bubble y" href="#s1" style="left:63.5%;top:207px;--r:3deg;transform:translate(-50%,-50%) rotate(3deg)">想支持綠能</a><a class="bubble m" href="#s1" style="left:71.7%;top:237px;--r:3deg;transform:translate(-50%,-50%) rotate(3deg)">開始跑馬拉松了</a></div>
       <button class="shuffle"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="3"><path d="M20 12a8 8 0 1 1-2.5-5.8"/><path d="M20 3v5h-5"/></svg>換一批</button>
       <!-- 吉祥物：設計稿中為點陣圖，這裡是示意版，請替換為正式素材 -->
       <svg class="mascot" viewBox="0 0 200 200" aria-label="口袋吉祥物">
