@@ -1,0 +1,1136 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>設計系統文件</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --doc-bg: #ffffff;
+      --doc-surface: #ffffff;
+      --doc-surface-subtle: #f5f6f3;
+      --doc-text: #141414;
+      --doc-muted: #60645f;
+      --doc-border: #d7dbd3;
+      --doc-border-strong: #aeb5aa;
+      --doc-accent: #2f5d3a;
+      --doc-code-bg: #f0f2ee;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--doc-bg);
+      color: var(--doc-text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Noto Sans JP", sans-serif;
+      line-height: 1.55;
+    }
+    a { color: var(--doc-accent); }
+    .layout {
+      display: grid;
+      grid-template-columns: 288px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+    aside {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+      padding: 28px 22px;
+      border-right: 1px solid var(--doc-border);
+      background: var(--doc-surface);
+    }
+    main {
+      width: min(1160px, 100%);
+      padding: 34px 32px 72px;
+    }
+    .brand {
+      font-size: 14px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0;
+      margin: 0 0 4px;
+    }
+    .subtitle {
+      color: var(--doc-muted);
+      font-size: 13px;
+      margin: 0 0 24px;
+    }
+    nav a {
+      display: block;
+      padding: 7px 0;
+      color: var(--doc-muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 650;
+    }
+    nav a:hover { color: var(--doc-text); }
+    .language-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0 0 20px;
+    }
+    .language-nav button {
+      appearance: none;
+      border: 1px solid var(--doc-border);
+      border-radius: 6px;
+      background: var(--doc-surface);
+      padding: 6px 12px;
+      color: var(--doc-muted);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 650;
+      cursor: pointer;
+    }
+    .language-nav button:hover,
+    .language-nav button:focus-visible {
+      color: var(--doc-text);
+      border-color: var(--doc-border-strong);
+    }
+    .language-nav button[aria-selected="true"] {
+      background: var(--doc-surface-subtle);
+      border-color: var(--doc-border-strong);
+      color: var(--doc-text);
+    }
+    .hero {
+      padding: 0 0 24px;
+      border-bottom: 1px solid var(--doc-border);
+      margin-bottom: 18px;
+    }
+    .hero h1 {
+      max-width: 760px;
+      font-size: 34px;
+      line-height: 1.12;
+      margin: 0 0 12px;
+      letter-spacing: 0;
+    }
+    .hero p {
+      max-width: 820px;
+      margin: 0;
+      color: var(--doc-muted);
+    }
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .pill {
+      border: 1px solid var(--doc-border);
+      background: var(--doc-surface);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 13px;
+      color: var(--doc-muted);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0;
+      border-bottom: 1px solid var(--doc-border);
+      margin-bottom: 8px;
+    }
+    .stat {
+      padding: 14px 18px 16px;
+      border-right: 1px solid var(--doc-border);
+    }
+    .stat:first-child { padding-left: 0; }
+    .stat:last-child { border-right: 0; }
+    .stat strong {
+      display: block;
+      font-size: 24px;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .stat span {
+      color: var(--doc-muted);
+      font-size: 13px;
+    }
+    .panel {
+      padding: 24px 0;
+      background: transparent;
+      border-top: 1px solid var(--doc-border);
+      margin: 0;
+      overflow: hidden;
+    }
+    .panel h1, .panel h2, .panel h3, .panel h4 {
+      letter-spacing: 0;
+      line-height: 1.15;
+      margin-top: 0;
+    }
+    .panel h1 { font-size: 30px; }
+    .panel h2 { font-size: 23px; margin-top: 26px; }
+    .panel h3 { font-size: 18px; margin-top: 22px; }
+    .panel p, .panel li { color: var(--doc-text); }
+    .muted { color: var(--doc-muted); }
+    .source {
+      display: inline-block;
+      color: var(--doc-muted);
+      font-size: 13px;
+      margin-bottom: 16px;
+    }
+    code {
+      background: var(--doc-code-bg);
+      border-radius: 5px;
+      padding: 2px 5px;
+      font-size: 0.92em;
+    }
+    pre {
+      overflow: auto;
+      padding: 16px;
+      border-radius: 8px;
+      background: #1d211b;
+      color: #f5f7f2;
+    }
+    pre code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+    }
+    .table-wrap {
+      overflow: auto;
+      border: 1px solid var(--doc-border);
+      border-radius: 6px;
+      margin: 16px 0;
+    }
+    .doc-image {
+      display: block;
+      max-width: min(220px, 100%);
+      max-height: 160px;
+      margin: 4px 0;
+      border: 1px solid var(--doc-border);
+      border-radius: 6px;
+      background: var(--doc-surface);
+      object-fit: contain;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 680px;
+    }
+    th, td {
+      border-bottom: 1px solid var(--doc-border);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+      font-size: 14px;
+    }
+    th {
+      background: var(--doc-surface-subtle);
+      color: var(--doc-muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+    tr:last-child td { border-bottom: 0; }
+    .swatch {
+      display: inline-block;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 1px solid var(--doc-border);
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+    @media (max-width: 860px) {
+      .layout { display: block; }
+      aside {
+        position: relative;
+        height: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--doc-border);
+      }
+      main { padding: 24px 16px 56px; }
+      .grid { grid-template-columns: 1fr; }
+      .stat,
+      .stat + .stat,
+      .stat:last-child {
+        border-right: 0;
+        border-top: 1px solid var(--doc-border);
+        padding: 14px 0;
+      }
+      .hero { padding-bottom: 20px; }
+      .panel { padding: 22px 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside>
+      <p class="brand" data-i18n="brand">設計系統</p>
+      <p class="subtitle" data-i18n="subtitle">自動產生文件</p>
+      <div class="language-nav" role="tablist" aria-label="語言">
+        <button type="button" role="tab" data-language-button="zh-Hant" aria-selected="true">繁中</button>
+        <button type="button" role="tab" data-language-button="en" aria-selected="false">EN</button>
+        <button type="button" role="tab" data-language-button="ja" aria-selected="false">日本語</button>
+      </div>
+      <nav>
+        <a href="#overview" data-i18n="navOverview">總覽</a><a href="#tokens" data-i18n="navTokens">Tokens</a><a href="review.html" data-i18n="navReviewQueue">審查佇列</a><a href="#doc-design-system-kickstart-md" data-i18n="docKickstart">Kickstart</a><a href="#doc-session-state-md" data-i18n="docSessionState">Session 狀態</a><a href="#doc-integration-review-md" data-i18n="docIntegrationReview">整併審查</a><a href="#doc-design-evidence-map-md" data-i18n="docEvidenceMap">設計證據對照</a><a href="#doc-design-principles-md" data-i18n="docDesignPrinciples">設計原則</a><a href="#doc-design-elements-md" data-i18n="docDesignElements">設計元素</a><a href="#doc-token-architecture-md" data-i18n="docTokenArchitecture">Token 架構</a><a href="#doc-component-inventory-md" data-i18n="docComponentInventory">元件盤點</a><a href="#doc-component-spec-template-md" data-i18n="docComponentSpecTemplate">元件規格範本</a><a href="#doc-interaction-states-md" data-i18n="docInteractionStates">互動狀態</a><a href="#doc-page-composition-rules-md" data-i18n="docPageComposition">頁面組成</a><a href="#doc-anti-ai-style-rules-md" data-i18n="docAntiAiStyleRules">Anti-AI 風格規則</a><a href="#doc-components-fund-company-card-md" data-i18n-template="component" data-i18n-name="Fund Company Card">元件：Fund Company Card</a><a href="#doc-components-site-header-md" data-i18n-template="component" data-i18n-name="Site Header">元件：Site Header</a>
+      </nav>
+    </aside>
+    <main>
+      <section class="hero" id="overview">
+        <h1 data-i18n="heroTitle">設計系統文件</h1>
+        <p data-i18n="heroLead" data-i18n-html="true">此靜態參考文件由 <code>design-system/</code> Markdown 與 <code>tokens/</code> CSS 自訂屬性自動產生。</p>
+        <div class="meta">
+          <span class="pill"><span data-i18n="pillGenerated">產生時間</span> 2026-10-20T09:19:45.389Z</span>
+          <span class="pill">14 <span data-i18n="pillDocuments">份文件</span></span>
+          <span class="pill">114 <span data-i18n="pillTokens">個 tokens</span></span>
+        </div>
+      </section>
+
+      <section class="grid" aria-label="文件摘要">
+        <div class="stat"><strong>14</strong><span data-i18n="statDocuments">設計系統文件</span></div>
+        <div class="stat"><strong>114</strong><span data-i18n="statTokens">Token 總數</span></div>
+        <div class="stat"><strong>48</strong><span data-i18n="statTokenRef">Reference tokens</span></div>
+        <div class="stat"><strong>49</strong><span data-i18n="statTokenSys">System tokens</span></div>
+        <div class="stat"><strong>17</strong><span data-i18n="statTokenComp">Component tokens</span></div>
+        <div class="stat"><strong>0</strong><span data-i18n="statMissing">缺少預期文件</span></div>
+      </section>
+
+      <section id="tokens">
+        <section class="panel" id="ref">
+    <h2 data-i18n="tokenRef">Reference Tokens</h2>
+    <div class="table-wrap"><table>
+      <thead><tr>
+        <th data-i18n="tokenColumnName">Token</th>
+        <th data-i18n="tokenColumnValue">值</th>
+        <th data-i18n="tokenColumnResolved">解析值</th>
+      </tr></thead>
+      <tbody><tr>
+        <td><code>--md-ref-color-warm-100</code></td>
+        <td><code>#ffffff</code></td>
+        <td><span class="swatch" style="background:#ffffff"></span><code>#ffffff</code></td>
+      </tr><tr>
+        <td><code>--md-ref-color-warm-98</code></td>
+        <td><code>#fef7e8</code></td>
+        <td><span class="swatch" style="background:#fef7e8"></span><code>#fef7e8</code></td>
+      </tr><tr>
+        <td><code>--md-ref-color-warm-97</code></td>
+        <td><code>#fcf8f1</code></td>
+        <td><span class="swatch" style="background:#fcf8f1"></span><code>#fcf8f1</code></td>
+      </tr><tr>
+        <td><code>--md-ref-color-warm-96</code></td>
+        <td><code>#faf7f1</code></td>
+        <td><span class="swatch" style="background:#faf7f1"></span><code>#faf7f1</code></td>
+      </tr><tr>
+        <td><code>--md-ref-color-warm-95</code></td>
+        <td><code>#f7f0e2</code></td>
+        <td><span class="swatch" style="background:#f7f0e2"></span><code>#f7f0e2</code></td>
+      </tr><tr>
+        <td><code>--md-ref-color-warm-90</code></td>
+        <td><code>#e7dcc6</code></td>
+        <td><span class="swatch" style="background:#e7dcc6"></span><code>#e7dcc6</code></td>
+      </tr><tr>
+        <td><code>--md-ref-color-gold-98</code></td>
+        <td><code>#fef1cf</code></td>
+        <td><span class="swatch" style="background:#fef1cf"></span><code>#fef1cf</code></td>
+      </tr><tr>
+        <td><code>--md-ref-color-gold-95</code></td>
+        <td><code>#fdefc4</code></td>
+        <td><span class="swatch" style="background:#fdefc4"></span><code>#fdefc4</code></td>
+      </tr><tr>
+        <td><code>--md-ref-color-gold-90</code></td>
+        <td><code>#f7e5be</code></td>
+        <td><span class="swatch" style="background:#f7e5be"></span><code>#f7e5be</code></td>
+      </tr><tr>
+        <td><code>--md-ref-color-gold-65</code></td>
+        <td><code>#f5a525</code></td>
+        <td><span class="swatch" style="background:#f5a525"></span><code>#f5a525</code></td>
+      </tr><tr>
+        <td><code>--md-ref-color-gold-55</code></td>
+        <td><code>#c8901f</code></td>
+        <td><span class="swatch" style="background:#c8901f"></span><code>#c8901f</code></td>
+      </tr><tr>
+        <td><code>--md-ref-color-gold-35</code></td>
+        <td><code>#8a5a0f</code></td>
+        <td><span class="swatch" style="background:#8a5a0f"></span><code>#8a5a0f</code></td>
+      </tr><tr>
+        <td><code>--md-ref-color-gold-15</code></td>
+        <td><code>#3d2a0f</code></td>
+        <td><span class="swatch" style="background:#3d2a0f"></span><code>#3d2a0f</code></td>
+      </tr><tr>
+        <td><code>--md-ref-color-slate-75</code></td>
+        <td><code>#b8c2c8</code></td>
+        <td><span class="swatch" style="background:#b8c2c8"></span><code>#b8c2c8</code></td>
+      </tr><tr>
+        <td><code>--md-ref-color-slate-45</code></td>
+        <td><code>#5b6b7e</code></td>
+        <td><span class="swatch" style="background:#5b6b7e"></span><code>#5b6b7e</code></td>
+      </tr><tr>
+        <td><code>--md-ref-color-slate-42</code></td>
+        <td><code>#536475</code></td>
+        <td><span class="swatch" style="background:#536475"></span><code>#536475</code></td>
+      </tr><tr>
+        <td><code>--md-ref-color-slate-35</code></td>
+        <td><code>#4b5563</code></td>
+        <td><span class="swatch" style="background:#4b5563"></span><code>#4b5563</code></td>
+      </tr><tr>
+        <td><code>--md-ref-color-slate-15</code></td>
+        <td><code>#1f2936</code></td>
+        <td><span class="swatch" style="background:#1f2936"></span><code>#1f2936</code></td>
+      </tr><tr>
+        <td><code>--md-ref-color-slate-12</code></td>
+        <td><code>#182330</code></td>
+        <td><span class="swatch" style="background:#182330"></span><code>#182330</code></td>
+      </tr><tr>
+        <td><code>--md-ref-color-navy-16</code></td>
+        <td><code>#102b42</code></td>
+        <td><span class="swatch" style="background:#102b42"></span><code>#102b42</code></td>
+      </tr><tr>
+        <td><code>--md-ref-color-navy-12</code></td>
+        <td><code>#13243a</code></td>
+        <td><span class="swatch" style="background:#13243a"></span><code>#13243a</code></td>
+      </tr><tr>
+        <td><code>--md-ref-color-blue-95</code></td>
+        <td><code>#e6f0fb</code></td>
+        <td><span class="swatch" style="background:#e6f0fb"></span><code>#e6f0fb</code></td>
+      </tr><tr>
+        <td><code>--md-ref-color-blue-90</code></td>
+        <td><code>#d8e9f8</code></td>
+        <td><span class="swatch" style="background:#d8e9f8"></span><code>#d8e9f8</code></td>
+      </tr><tr>
+        <td><code>--md-ref-color-blue-40</code></td>
+        <td><code>#1c64ae</code></td>
+        <td><span class="swatch" style="background:#1c64ae"></span><code>#1c64ae</code></td>
+      </tr><tr>
+        <td><code>--md-ref-color-green-95</code></td>
+        <td><code>#e1f8f3</code></td>
+        <td><span class="swatch" style="background:#e1f8f3"></span><code>#e1f8f3</code></td>
+      </tr><tr>
+        <td><code>--md-ref-color-green-85</code></td>
+        <td><code>#bbede0</code></td>
+        <td><span class="swatch" style="background:#bbede0"></span><code>#bbede0</code></td>
+      </tr><tr>
+        <td><code>--md-ref-color-green-40</code></td>
+        <td><code>#007a64</code></td>
+        <td><span class="swatch" style="background:#007a64"></span><code>#007a64</code></td>
+      </tr><tr>
+        <td><code>--md-ref-typeface-noto-sans-tc</code></td>
+        <td><code>&quot;Noto Sans TC&quot;, &quot;Noto Sans CJK TC&quot;, sans-serif</code></td>
+        <td><code>&quot;Noto Sans TC&quot;, &quot;Noto Sans CJK TC&quot;, sans-serif</code></td>
+      </tr><tr>
+        <td><code>--md-ref-weight-400</code></td>
+        <td><code>400</code></td>
+        <td><code>400</code></td>
+      </tr><tr>
+        <td><code>--md-ref-weight-500</code></td>
+        <td><code>500</code></td>
+        <td><code>500</code></td>
+      </tr><tr>
+        <td><code>--md-ref-weight-700</code></td>
+        <td><code>700</code></td>
+        <td><code>700</code></td>
+      </tr><tr>
+        <td><code>--md-ref-weight-900</code></td>
+        <td><code>900</code></td>
+        <td><code>900</code></td>
+      </tr><tr>
+        <td><code>--md-ref-size-12</code></td>
+        <td><code>12px</code></td>
+        <td><code>12px</code></td>
+      </tr><tr>
+        <td><code>--md-ref-size-14</code></td>
+        <td><code>14px</code></td>
+        <td><code>14px</code></td>
+      </tr><tr>
+        <td><code>--md-ref-size-16</code></td>
+        <td><code>16px</code></td>
+        <td><code>16px</code></td>
+      </tr><tr>
+        <td><code>--md-ref-size-18</code></td>
+        <td><code>18px</code></td>
+        <td><code>18px</code></td>
+      </tr><tr>
+        <td><code>--md-ref-size-20</code></td>
+        <td><code>20px</code></td>
+        <td><code>20px</code></td>
+      </tr><tr>
+        <td><code>--md-ref-size-28</code></td>
+        <td><code>28px</code></td>
+        <td><code>28px</code></td>
+      </tr><tr>
+        <td><code>--md-ref-size-36</code></td>
+        <td><code>36px</code></td>
+        <td><code>36px</code></td>
+      </tr><tr>
+        <td><code>--md-ref-size-48</code></td>
+        <td><code>48px</code></td>
+        <td><code>48px</code></td>
+      </tr><tr>
+        <td><code>--md-ref-size-8</code></td>
+        <td><code>8px</code></td>
+        <td><code>8px</code></td>
+      </tr><tr>
+        <td><code>--md-ref-size-22</code></td>
+        <td><code>22px</code></td>
+        <td><code>22px</code></td>
+      </tr><tr>
+        <td><code>--md-ref-size-60</code></td>
+        <td><code>60px</code></td>
+        <td><code>60px</code></td>
+      </tr><tr>
+        <td><code>--md-ref-size-1140</code></td>
+        <td><code>1140px</code></td>
+        <td><code>1140px</code></td>
+      </tr><tr>
+        <td><code>--md-ref-size-1440</code></td>
+        <td><code>1440px</code></td>
+        <td><code>1440px</code></td>
+      </tr><tr>
+        <td><code>--md-ref-radius-8</code></td>
+        <td><code>8px</code></td>
+        <td><code>8px</code></td>
+      </tr><tr>
+        <td><code>--md-ref-radius-12</code></td>
+        <td><code>12px</code></td>
+        <td><code>12px</code></td>
+      </tr><tr>
+        <td><code>--md-ref-radius-999</code></td>
+        <td><code>999px</code></td>
+        <td><code>999px</code></td>
+      </tr></tbody>
+    </table></div>
+  </section>
+<section class="panel" id="sys">
+    <h2 data-i18n="tokenSys">System Tokens</h2>
+    <div class="table-wrap"><table>
+      <thead><tr>
+        <th data-i18n="tokenColumnName">Token</th>
+        <th data-i18n="tokenColumnValue">值</th>
+        <th data-i18n="tokenColumnResolved">解析值</th>
+      </tr></thead>
+      <tbody><tr>
+        <td><code>--md-sys-color-background</code></td>
+        <td><code>var(--md-ref-color-warm-96)</code></td>
+        <td><span class="swatch" style="background:#faf7f1"></span><code>#faf7f1</code></td>
+      </tr><tr>
+        <td><code>--md-sys-color-on-background</code></td>
+        <td><code>var(--md-ref-color-slate-12)</code></td>
+        <td><span class="swatch" style="background:#182330"></span><code>#182330</code></td>
+      </tr><tr>
+        <td><code>--md-sys-color-surface</code></td>
+        <td><code>var(--md-ref-color-warm-97)</code></td>
+        <td><span class="swatch" style="background:#fcf8f1"></span><code>#fcf8f1</code></td>
+      </tr><tr>
+        <td><code>--md-sys-color-on-surface</code></td>
+        <td><code>var(--md-ref-color-slate-15)</code></td>
+        <td><span class="swatch" style="background:#1f2936"></span><code>#1f2936</code></td>
+      </tr><tr>
+        <td><code>--md-sys-color-surface-band</code></td>
+        <td><code>var(--md-ref-color-warm-95)</code></td>
+        <td><span class="swatch" style="background:#f7f0e2"></span><code>#f7f0e2</code></td>
+      </tr><tr>
+        <td><code>--md-sys-color-on-surface-band</code></td>
+        <td><code>var(--md-ref-color-slate-12)</code></td>
+        <td><span class="swatch" style="background:#182330"></span><code>#182330</code></td>
+      </tr><tr>
+        <td><code>--md-sys-color-surface-bright</code></td>
+        <td><code>var(--md-ref-color-warm-100)</code></td>
+        <td><span class="swatch" style="background:#ffffff"></span><code>#ffffff</code></td>
+      </tr><tr>
+        <td><code>--md-sys-color-on-surface-bright</code></td>
+        <td><code>var(--md-ref-color-slate-75)</code></td>
+        <td><span class="swatch" style="background:#b8c2c8"></span><code>#b8c2c8</code></td>
+      </tr><tr>
+        <td><code>--md-sys-color-outline</code></td>
+        <td><code>var(--md-ref-color-warm-90)</code></td>
+        <td><span class="swatch" style="background:#e7dcc6"></span><code>#e7dcc6</code></td>
+      </tr><tr>
+        <td><code>--md-sys-color-text-secondary</code></td>
+        <td><code>var(--md-ref-color-slate-35)</code></td>
+        <td><span class="swatch" style="background:#4b5563"></span><code>#4b5563</code></td>
+      </tr><tr>
+        <td><code>--md-sys-color-text-tertiary</code></td>
+        <td><code>var(--md-ref-color-slate-45)</code></td>
+        <td><span class="swatch" style="background:#5b6b7e"></span><code>#5b6b7e</code></td>
+      </tr><tr>
+        <td><code>--md-sys-color-text-link</code></td>
+        <td><code>var(--md-ref-color-gold-35)</code></td>
+        <td><span class="swatch" style="background:#8a5a0f"></span><code>#8a5a0f</code></td>
+      </tr><tr>
+        <td><code>--md-sys-color-primary</code></td>
+        <td><code>var(--md-ref-color-gold-55)</code></td>
+        <td><span class="swatch" style="background:#c8901f"></span><code>#c8901f</code></td>
+      </tr><tr>
+        <td><code>--md-sys-color-on-primary</code></td>
+        <td><code>var(--md-ref-color-warm-100)</code></td>
+        <td><span class="swatch" style="background:#ffffff"></span><code>#ffffff</code></td>
+      </tr><tr>
+        <td><code>--md-sys-color-secondary</code></td>
+        <td><code>var(--md-ref-color-gold-65)</code></td>
+        <td><span class="swatch" style="background:#f5a525"></span><code>#f5a525</code></td>
+      </tr><tr>
+        <td><code>--md-sys-color-on-secondary</code></td>
+        <td><code>var(--md-ref-color-warm-100)</code></td>
+        <td><span class="swatch" style="background:#ffffff"></span><code>#ffffff</code></td>
+      </tr><tr>
+        <td><code>--md-sys-color-accent-container</code></td>
+        <td><code>var(--md-ref-color-gold-95)</code></td>
+        <td><span class="swatch" style="background:#fdefc4"></span><code>#fdefc4</code></td>
+      </tr><tr>
+        <td><code>--md-sys-color-on-accent-container</code></td>
+        <td><code>var(--md-ref-color-gold-35)</code></td>
+        <td><span class="swatch" style="background:#8a5a0f"></span><code>#8a5a0f</code></td>
+      </tr><tr>
+        <td><code>--md-sys-color-inverse</code></td>
+        <td><code>var(--md-ref-color-navy-16)</code></td>
+        <td><span class="swatch" style="background:#102b42"></span><code>#102b42</code></td>
+      </tr><tr>
+        <td><code>--md-sys-color-on-inverse</code></td>
+        <td><code>var(--md-ref-color-warm-100)</code></td>
+        <td><span class="swatch" style="background:#ffffff"></span><code>#ffffff</code></td>
+      </tr><tr>
+        <td><code>--md-sys-color-category-growth-background</code></td>
+        <td><code>var(--md-ref-color-blue-95)</code></td>
+        <td><span class="swatch" style="background:#e6f0fb"></span><code>#e6f0fb</code></td>
+      </tr><tr>
+        <td><code>--md-sys-color-on-category-growth-background</code></td>
+        <td><code>var(--md-ref-color-slate-12)</code></td>
+        <td><span class="swatch" style="background:#182330"></span><code>#182330</code></td>
+      </tr><tr>
+        <td><code>--md-sys-color-category-growth-action</code></td>
+        <td><code>var(--md-ref-color-blue-40)</code></td>
+        <td><span class="swatch" style="background:#1c64ae"></span><code>#1c64ae</code></td>
+      </tr><tr>
+        <td><code>--md-sys-color-on-category-growth-action</code></td>
+        <td><code>var(--md-ref-color-warm-100)</code></td>
+        <td><span class="swatch" style="background:#ffffff"></span><code>#ffffff</code></td>
+      </tr><tr>
+        <td><code>--md-sys-color-category-steady-background</code></td>
+        <td><code>var(--md-ref-color-green-95)</code></td>
+        <td><span class="swatch" style="background:#e1f8f3"></span><code>#e1f8f3</code></td>
+      </tr><tr>
+        <td><code>--md-sys-color-on-category-steady-background</code></td>
+        <td><code>var(--md-ref-color-slate-12)</code></td>
+        <td><span class="swatch" style="background:#182330"></span><code>#182330</code></td>
+      </tr><tr>
+        <td><code>--md-sys-color-category-steady-action</code></td>
+        <td><code>var(--md-ref-color-green-40)</code></td>
+        <td><span class="swatch" style="background:#007a64"></span><code>#007a64</code></td>
+      </tr><tr>
+        <td><code>--md-sys-color-on-category-steady-action</code></td>
+        <td><code>var(--md-ref-color-warm-100)</code></td>
+        <td><span class="swatch" style="background:#ffffff"></span><code>#ffffff</code></td>
+      </tr><tr>
+        <td><code>--md-sys-typeface-brand</code></td>
+        <td><code>var(--md-ref-typeface-noto-sans-tc)</code></td>
+        <td><code>&quot;Noto Sans TC&quot;, &quot;Noto Sans CJK TC&quot;, sans-serif</code></td>
+      </tr><tr>
+        <td><code>--md-sys-typescale-display-size</code></td>
+        <td><code>var(--md-ref-size-48)</code></td>
+        <td><code>48px</code></td>
+      </tr><tr>
+        <td><code>--md-sys-typescale-headline-size</code></td>
+        <td><code>var(--md-ref-size-36)</code></td>
+        <td><code>36px</code></td>
+      </tr><tr>
+        <td><code>--md-sys-typescale-title-large-size</code></td>
+        <td><code>var(--md-ref-size-28)</code></td>
+        <td><code>28px</code></td>
+      </tr><tr>
+        <td><code>--md-sys-typescale-title-medium-size</code></td>
+        <td><code>var(--md-ref-size-20)</code></td>
+        <td><code>20px</code></td>
+      </tr><tr>
+        <td><code>--md-sys-typescale-title-small-size</code></td>
+        <td><code>var(--md-ref-size-18)</code></td>
+        <td><code>18px</code></td>
+      </tr><tr>
+        <td><code>--md-sys-typescale-body-size</code></td>
+        <td><code>var(--md-ref-size-16)</code></td>
+        <td><code>16px</code></td>
+      </tr><tr>
+        <td><code>--md-sys-typescale-label-size</code></td>
+        <td><code>var(--md-ref-size-14)</code></td>
+        <td><code>14px</code></td>
+      </tr><tr>
+        <td><code>--md-sys-typescale-metadata-size</code></td>
+        <td><code>var(--md-ref-size-12)</code></td>
+        <td><code>12px</code></td>
+      </tr><tr>
+        <td><code>--md-sys-typescale-strong-weight</code></td>
+        <td><code>var(--md-ref-weight-700)</code></td>
+        <td><code>700</code></td>
+      </tr><tr>
+        <td><code>--md-sys-typescale-heavy-weight</code></td>
+        <td><code>var(--md-ref-weight-900)</code></td>
+        <td><code>900</code></td>
+      </tr><tr>
+        <td><code>--md-sys-typescale-regular-weight</code></td>
+        <td><code>var(--md-ref-weight-400)</code></td>
+        <td><code>400</code></td>
+      </tr><tr>
+        <td><code>--md-sys-layout-viewport-desktop</code></td>
+        <td><code>var(--md-ref-size-1440)</code></td>
+        <td><code>1440px</code></td>
+      </tr><tr>
+        <td><code>--md-sys-layout-content-width</code></td>
+        <td><code>var(--md-ref-size-1140)</code></td>
+        <td><code>1140px</code></td>
+      </tr><tr>
+        <td><code>--md-sys-spacing-gap-sm</code></td>
+        <td><code>var(--md-ref-size-8)</code></td>
+        <td><code>8px</code></td>
+      </tr><tr>
+        <td><code>--md-sys-spacing-gap-md</code></td>
+        <td><code>var(--md-ref-size-16)</code></td>
+        <td><code>16px</code></td>
+      </tr><tr>
+        <td><code>--md-sys-spacing-gap-grid</code></td>
+        <td><code>var(--md-ref-size-22)</code></td>
+        <td><code>22px</code></td>
+      </tr><tr>
+        <td><code>--md-sys-spacing-region-header-height</code></td>
+        <td><code>var(--md-ref-size-60)</code></td>
+        <td><code>60px</code></td>
+      </tr><tr>
+        <td><code>--md-sys-shape-corner-sm</code></td>
+        <td><code>var(--md-ref-radius-8)</code></td>
+        <td><code>8px</code></td>
+      </tr><tr>
+        <td><code>--md-sys-shape-corner-md</code></td>
+        <td><code>var(--md-ref-radius-12)</code></td>
+        <td><code>12px</code></td>
+      </tr><tr>
+        <td><code>--md-sys-shape-corner-full</code></td>
+        <td><code>var(--md-ref-radius-999)</code></td>
+        <td><code>999px</code></td>
+      </tr></tbody>
+    </table></div>
+  </section>
+<section class="panel" id="comp">
+    <h2 data-i18n="tokenComp">Component Tokens</h2>
+    <div class="table-wrap"><table>
+      <thead><tr>
+        <th data-i18n="tokenColumnName">Token</th>
+        <th data-i18n="tokenColumnValue">值</th>
+        <th data-i18n="tokenColumnResolved">解析值</th>
+      </tr></thead>
+      <tbody><tr>
+        <td><code>--md-comp-site-header-container-color</code></td>
+        <td><code>var(--md-sys-color-surface)</code></td>
+        <td><span class="swatch" style="background:#fcf8f1"></span><code>#fcf8f1</code></td>
+      </tr><tr>
+        <td><code>--md-comp-site-header-bottom-border-color</code></td>
+        <td><code>var(--md-sys-color-outline)</code></td>
+        <td><span class="swatch" style="background:#e7dcc6"></span><code>#e7dcc6</code></td>
+      </tr><tr>
+        <td><code>--md-comp-site-header-height</code></td>
+        <td><code>var(--md-sys-spacing-region-header-height)</code></td>
+        <td><code>60px</code></td>
+      </tr><tr>
+        <td><code>--md-comp-site-header-nav-text-color</code></td>
+        <td><code>var(--md-sys-color-on-background)</code></td>
+        <td><span class="swatch" style="background:#182330"></span><code>#182330</code></td>
+      </tr><tr>
+        <td><code>--md-comp-site-header-nav-text-size</code></td>
+        <td><code>var(--md-sys-typescale-label-size)</code></td>
+        <td><code>14px</code></td>
+      </tr><tr>
+        <td><code>--md-comp-site-header-search-container-color</code></td>
+        <td><code>var(--md-sys-color-surface-bright)</code></td>
+        <td><span class="swatch" style="background:#ffffff"></span><code>#ffffff</code></td>
+      </tr><tr>
+        <td><code>--md-comp-site-header-search-placeholder-color</code></td>
+        <td><code>var(--md-sys-color-on-surface-bright)</code></td>
+        <td><span class="swatch" style="background:#b8c2c8"></span><code>#b8c2c8</code></td>
+      </tr><tr>
+        <td><code>--md-comp-site-header-search-corner</code></td>
+        <td><code>var(--md-sys-shape-corner-full)</code></td>
+        <td><code>999px</code></td>
+      </tr><tr>
+        <td><code>--md-comp-fund-company-card-container-color</code></td>
+        <td><code>var(--md-sys-color-surface-bright)</code></td>
+        <td><span class="swatch" style="background:#ffffff"></span><code>#ffffff</code></td>
+      </tr><tr>
+        <td><code>--md-comp-fund-company-card-corner</code></td>
+        <td><code>var(--md-sys-shape-corner-md)</code></td>
+        <td><code>12px</code></td>
+      </tr><tr>
+        <td><code>--md-comp-fund-company-card-name-text-color</code></td>
+        <td><code>var(--md-sys-color-on-background)</code></td>
+        <td><span class="swatch" style="background:#182330"></span><code>#182330</code></td>
+      </tr><tr>
+        <td><code>--md-comp-fund-company-card-name-text-size</code></td>
+        <td><code>var(--md-sys-typescale-title-small-size)</code></td>
+        <td><code>18px</code></td>
+      </tr><tr>
+        <td><code>--md-comp-fund-company-card-legal-name-text-color</code></td>
+        <td><code>var(--md-sys-color-text-tertiary)</code></td>
+        <td><span class="swatch" style="background:#5b6b7e"></span><code>#5b6b7e</code></td>
+      </tr><tr>
+        <td><code>--md-comp-fund-company-card-legal-name-text-size</code></td>
+        <td><code>var(--md-sys-typescale-label-size)</code></td>
+        <td><code>14px</code></td>
+      </tr><tr>
+        <td><code>--md-comp-fund-company-card-stats-text-color</code></td>
+        <td><code>var(--md-sys-color-text-link)</code></td>
+        <td><span class="swatch" style="background:#8a5a0f"></span><code>#8a5a0f</code></td>
+      </tr><tr>
+        <td><code>--md-comp-fund-company-card-stats-text-size</code></td>
+        <td><code>var(--md-sys-typescale-label-size)</code></td>
+        <td><code>14px</code></td>
+      </tr><tr>
+        <td><code>--md-comp-fund-company-card-grid-gap</code></td>
+        <td><code>var(--md-sys-spacing-gap-grid)</code></td>
+        <td><code>22px</code></td>
+      </tr></tbody>
+    </table></div>
+  </section>
+      </section>
+
+      
+      <section class="panel" id="doc-design-system-kickstart-md">
+      <span class="source">DESIGN_SYSTEM_KICKSTART.md</span>
+      <h1 id="doc-design-system-kickstart-md-design-system-extraction-kickstart">Design System Extraction Kickstart</h1>
+<p>Extract a reusable design-system specification from the provided references.</p>
+<p>Do not implement product screens yet. Do not scaffold app routes yet. Do not invent a landing page.</p>
+<h2 id="doc-design-system-kickstart-md-references">References</h2>
+<p>List screenshots, graphic/brand/editorial references, Figma URLs/nodes, rendered routes, native app captures, project folders, and prototype sources here.</p>
+<p>For AI-generated or vibe-coded project folders, include route/state coverage, rendered capture attempts, screenshot paths, Storybook stories, and keep/ignore notes before using source code as high-confidence evidence.</p>
+<p>For native iOS or Android project folders, include platform/framework coverage, native screen/state coverage, simulator/emulator/device or preview capture attempts, screenshot paths, design-system modules, token/resource files, component usage checks, and keep/ignore notes before using source code as high-confidence evidence.</p>
+<h2 id="doc-design-system-kickstart-md-required-order">Required Order</h2>
+<ol><li>Fill <code>DESIGN_EVIDENCE_MAP.md</code>, record source fingerprints, and review duplicate source candidates.</li><li>For vibe-coded projects, complete the route/state manifest, run rendered UI capture when possible, and classify demo-only, unused, dead-code, capture-blocked, auth-blocked, contradictory, or out-of-scope sources before raising confidence.</li><li>For native app projects, complete the native screen/state manifest, run native capture/preview/screenshot-test capture when possible, and classify native-source-only, native-capture-blocked, native-contradictory, or out-of-scope sources before raising confidence.</li><li>Fill <code>DESIGN_PRINCIPLES.md</code>.</li><li>Fill <code>DESIGN_ELEMENTS.md</code>.</li><li>Fill <code>TOKEN_ARCHITECTURE.md</code>, review near token candidates, then fill <code>tokens/</code>.</li><li>Fill <code>COMPONENT_INVENTORY.md</code>, including reusable typographic/text-lockup candidates, and review similar component candidates.</li><li>Extract at least one primary component token spec into <code>design-system/components/</code>. For graphic/editorial-heavy references, this may be a high-value typographic lockup instead of an interactive UI control.</li><li>Fill <code>PAGE_COMPOSITION_RULES.md</code>, <code>INTERACTION_STATES.md</code>, and <code>ANTI_AI_STYLE_RULES.md</code>.</li><li>Generate <code>docs/design-system/index.html</code> and <code>docs/design-system/review.html</code>.</li><li>Run strict source, token, and component audits.</li><li>For collaborative branch or PR work, update <code>INTEGRATION_REVIEW.md</code>.</li><li>Update <code>SESSION_STATE.md</code>.</li><li>Stop and ask the user what to do next.</li></ol>
+<h2 id="doc-design-system-kickstart-md-boundary">Boundary</h2>
+<p>This package defines design-system rules and tokens. Product implementation begins only after the user approves the checkpoint.</p>
+    </section>
+<section class="panel" id="doc-session-state-md">
+      <span class="source">SESSION_STATE.md</span>
+      <h1 id="doc-session-state-md-design-system-session-state">Design System Session State</h1>
+<p>Update this file at every checkpoint.</p>
+<h2 id="doc-session-state-md-current-stage">Current Stage</h2>
+<ul><li>Stage: Checkpoint — baseline extraction complete（現況基準線萃取完成，等待開發者決定）</li><li>Last updated: 2026-10-20</li><li>AI tool / model: Claude Code (cloud session)</li><li>Report Language: zh-Hant (繁體中文)</li></ul>
+<h2 id="doc-session-state-md-completed-outputs">Completed Outputs</h2>
+<ul><li>[x] DESIGN_EVIDENCE_MAP.md</li><li>[x] INTEGRATION_REVIEW.md（本輪不適用）</li><li>[x] DESIGN_PRINCIPLES.md</li><li>[x] DESIGN_ELEMENTS.md</li><li>[x] TOKEN_ARCHITECTURE.md</li><li>[x] COMPONENT_INVENTORY.md</li><li>[x] design-system/components/*.md component token specs</li><li>[x] INTERACTION_STATES.md</li><li>[x] PAGE_COMPOSITION_RULES.md</li><li>[x] ANTI_AI_STYLE_RULES.md</li><li>[x] tokens/tokens-ref.css</li><li>[x] tokens/tokens-sys.css</li><li>[x] tokens/tokens-comp.css</li><li>[ ] docs/design-system/index.html</li><li>[ ] docs/design-system/review.html</li></ul>
+<h2 id="doc-session-state-md-key-design-decisions">Key Design Decisions</h2>
+<div class="table-wrap"><table><thead><tr><th>Decision</th><th>Evidence</th><th>Files updated</th></tr></thead><tbody><tr><td>範圍：Figma 首頁、公司總覽、新手入門、追求成長、穩健配息（共 5 頁）；其餘 4 頁與 App 截圖、logo／IP 圖列為 planned</td><td>S1–S5、S7–S9</td><td>DESIGN_EVIDENCE_MAP.md</td></tr><tr><td>Figma 檔無 Variables、頁面為整張點陣圖 → 全部 token 標 <code>measured</code>，品牌定調前視為「現況基準線」</td><td><code>get_variable_defs</code> 回傳空；<code>get_design_context</code> 僅回傳單張圖片</td><td>TOKEN_ARCHITECTURE.md、tokens/*.css</td></tr><tr><td>近似色／近似字級一律暫定 <code>keep distinct</code>，不在品牌定調前合併</td><td>使用者同意（先萃取、後定配色）</td><td>TOKEN_ARCHITECTURE.md</td></tr><tr><td>抽出 2 個元件規格（site-header、fund-company-card）；button／fund-card 等因相似度待決，不建 spec</td><td>Similarity Review</td><td>COMPONENT_INVENTORY.md、components/*.md</td></tr></tbody></table></div>
+<h2 id="doc-session-state-md-token-layers-changed">Token Layers Changed</h2>
+<ul><li>Reference: 新增 warm／gold／slate／navy／blue／green 色階、字級、間距、圓角（全為 measured）</li><li>System: 新增 background／surface／primary／secondary／category 等語意色與 typescale、layout、shape</li><li>Component: site-header、fund-company-card 共 17 個 token</li></ul>
+<h2 id="doc-session-state-md-source-duplicate-review">Source Duplicate Review</h2>
+<ul><li>Duplicate source candidates found: 2（分類頁模板重複）</li><li>Developer decisions recorded in <code>DESIGN_EVIDENCE_MAP.md</code>: 2 筆，皆為暫定 keep distinct，待開發者確認</li><li>Source fingerprints recorded: 9 筆（5 筆含 sha256）</li></ul>
+<h2 id="doc-session-state-md-vibe-project-intake">Vibe Project Intake</h2>
+<ul><li>Applies: 否（來源為 Figma 點陣圖，非程式專案）</li><li>Route/state manifest:</li><li>Rendered UI capture pass:</li><li>App / Storybook command:</li><li>Local URL:</li><li>Rendered routes or stories covered:</li><li>Screenshots captured or supplied:</li><li>Capture assets path:</li><li>Capture blockers:</li><li>DOM/CSS inspection result:</li><li>Keep/ignore decisions recorded in <code>DESIGN_EVIDENCE_MAP.md</code>:</li><li>Demo-only / unused / dead-code / capture-blocked / auth-blocked / contradictory sources found:</li><li>Confidence impact:</li></ul>
+<h2 id="doc-session-state-md-native-app-intake">Native App Intake</h2>
+<ul><li>Applies:</li><li>Platforms/frameworks:</li><li>App targets/modules inspected:</li><li>Native design-system modules found:</li><li>Native screen/state manifest:</li><li>Native UI Capture Pass:</li><li>Capture commands:</li><li>Devices / OS/API levels covered:</li><li>Screens, previews, screenshot tests, or supplied captures covered:</li><li>Capture assets path:</li><li>Capture blockers:</li><li>Native token/resource files inspected:</li><li>Native component usage verification:</li><li>Keep/ignore decisions recorded in <code>DESIGN_EVIDENCE_MAP.md</code>:</li><li>Native source-only / capture-blocked / contradictory sources found:</li><li>Confidence impact:</li></ul>
+<h2 id="doc-session-state-md-token-review">Token Review</h2>
+<ul><li>Near token candidates found: 8 筆（audit 標出）＋4 組額外觀察</li><li>Developer decisions recorded in <code>TOKEN_ARCHITECTURE.md</code>: 8 筆暫定 keep distinct，<strong>全部待開發者確認</strong></li></ul>
+<h2 id="doc-session-state-md-component-similarity-review">Component Similarity Review</h2>
+<ul><li>Similar component candidates found: 4</li><li>Developer decisions recorded in <code>COMPONENT_INVENTORY.md</code>: 4 筆皆為 blocked（待開發者決定）</li><li>Visual comparison assets: <code>assets/component-review/</code>（8 張來源截圖裁切）</li></ul>
+<h2 id="doc-session-state-md-collaboration-review">Collaboration Review</h2>
+<ul><li>Active branches / PRs:</li><li>Integrator / reviewer:</li><li>Integration decisions recorded in <code>INTEGRATION_REVIEW.md</code>:</li><li>Blocked items:</li><li>Final integration result:</li></ul>
+<h2 id="doc-session-state-md-open-questions">Open Questions</h2>
+<ol><li>主按鈕色：首頁金色 #C8901F 與新手入門頁琥珀 #F5A525，要保留哪一個（或兩者語意區分）？</li><li>近似色（#FCF8F1／#FAF7F1、#1F2936／#182330 及三組灰藍）是否合併？建議在品牌配色定案後一併決定。</li><li>卡片頭圖的暗色科幻風格是否要保留？IP 中的紅色福神造型是否淘汰？</li><li>未分析來源：多元配置、海外佈局、基金學堂、學堂內頁、App 截圖（6 張）、logo 與 IP 原圖（見 S7–S9）。</li><li>字體：Figma 為點陣圖，無法確認實際字體與字級，需設計師提供。</li><li>分類頁大量卡片頭圖為空白佔位：是未完成稿還是載入狀態？</li></ol>
+<h2 id="doc-session-state-md-verification">Verification</h2>
+<ul><li>Source audit mode: strict</li><li>Source audit result: (see below)</li><li>Token audit mode: strict</li><li>Token audit result: (see below)</li><li>Component audit mode: strict</li><li>Component audit result: (see below)</li></ul>
+<h2 id="doc-session-state-md-generated-documentation">Generated Documentation</h2>
+<ul><li>HTML docs: docs/design-system/index.html</li><li>HTML docs UI locale: zh-Hant</li><li>Review queue: docs/design-system/review.html</li></ul>
+<h2 id="doc-session-state-md-recommended-next-prompt">Recommended Next Prompt</h2>
+<p>「品牌配色已定案為 …；請依此建立 Figma Variables，並用 design-system-extractor 跑 Late-Arriving Authoritative Source Pass 校準 fund-abao/tokens，並回覆 Token Recalibration 表。」</p>
+    </section>
+<section class="panel" id="doc-integration-review-md">
+      <span class="source">INTEGRATION_REVIEW.md</span>
+      <h1 id="doc-integration-review-md-integration-review">Integration Review</h1>
+<p>Use this file when multiple contributors extract sources, tokens, or components on separate branches or PRs for the same design-system package.</p>
+<h2 id="doc-integration-review-md-integration-round">Integration Round</h2>
+<ul><li>Target branch:</li><li>Integration branch:</li><li>Integrator / reviewer:</li><li>Started:</li><li>Completed:</li><li>Result: <code>not started</code></li></ul>
+<h2 id="doc-integration-review-md-branch-pr-queue">Branch / PR Queue</h2>
+<div class="table-wrap"><table><thead><tr><th>Branch / PR</th><th>Owner</th><th>Scope</th><th>Files touched</th><th>Evidence status</th><th>Token status</th><th>Component status</th><th>Docs status</th><th>Audit status</th><th>Reviewer decision</th><th>Follow-up</th></tr></thead><tbody></tbody></table></div>
+<p>Reviewer decision values: <code>merge</code>, <code>request changes</code>, <code>blocked</code>, <code>superseded</code>, <code>defer</code>.</p>
+<h2 id="doc-integration-review-md-cross-branch-decisions">Cross-Branch Decisions</h2>
+<p>Use this table when two branches overlap in source evidence, token candidates, component identity, naming, or generated outputs.</p>
+<div class="table-wrap"><table><thead><tr><th>Date</th><th>Branches / PRs</th><th>Overlap</th><th>Decision (<code>merge</code> / <code>make variant</code> / <code>keep distinct</code> / <code>reuse existing source</code> / <code>ignore duplicate</code> / <code>blocked</code>)</th><th>Rationale</th><th>Files updated</th><th>Confirmed by</th></tr></thead><tbody></tbody></table></div>
+<h2 id="doc-integration-review-md-merge-log">Merge Log</h2>
+<div class="table-wrap"><table><thead><tr><th>Date</th><th>Branch / PR</th><th>Commit / SHA</th><th>Reviewer</th><th>Decision</th><th>Audits run</th><th>Notes</th></tr></thead><tbody></tbody></table></div>
+<h2 id="doc-integration-review-md-blocked-items">Blocked Items</h2>
+<div class="table-wrap"><table><thead><tr><th>Item</th><th>Blocking question</th><th>Needed decision</th><th>Owner</th><th>Target date</th></tr></thead><tbody></tbody></table></div>
+<h2 id="doc-integration-review-md-final-integration-checklist">Final Integration Checklist</h2>
+<ul><li>[ ] Every branch or PR has a queue row and reviewer decision.</li><li>[ ] Duplicate source decisions are recorded in <code>DESIGN_EVIDENCE_MAP.md</code>.</li><li>[ ] Near-token decisions are recorded in <code>TOKEN_ARCHITECTURE.md</code>.</li><li>[ ] Similar component decisions are recorded in <code>COMPONENT_INVENTORY.md</code>.</li><li>[ ] Component specs changed in this integration have component fingerprints.</li><li>[ ] Token inheritance remains <code>ref -&gt; sys -&gt; comp</code>.</li><li>[ ] Generated HTML docs were regenerated after source conflicts were resolved.</li><li>[ ] Strict source, token, and component audits passed or blockers are recorded.</li></ul>
+    </section>
+<section class="panel" id="doc-design-evidence-map-md">
+      <span class="source">DESIGN_EVIDENCE_MAP.md</span>
+      <h1 id="doc-design-evidence-map-md-design-evidence-map">Design Evidence Map</h1>
+<p>Use this file to trace design decisions back to source evidence.</p>
+<h2 id="doc-design-evidence-map-md-source-inventory">Source Inventory</h2>
+<p>Evidence tier ranks the source's authority: <code>1</code> production Figma/component library, <code>2</code> production screenshots, <code>3</code> native simulator/emulator/device captures, <code>4</code> rendered project UI, <code>5</code> native preview/screenshot-test captures, <code>6</code> prototype code, <code>7</code> descriptive prompt. When a new source's tier outranks the tiers behind existing decisions, run the Late-Arriving Authoritative Source Pass instead of treating it as supplementary evidence.</p>
+<div class="table-wrap"><table><thead><tr><th>Source ID</th><th>Type</th><th>Evidence tier</th><th>Path / URL / Node</th><th>Source fingerprint</th><th>Screen or state</th><th>Notes</th><th>Confidence</th></tr></thead><tbody><tr><td>S1</td><td>Figma page raster（Figma 頁面點陣圖）</td><td>2</td><td>https://www.figma.com/design/T4Ddywb8e4bzFQDXEzU57z/ node <code>2:4</code> 首頁 1</td><td>figma:T4Ddywb8e4bzFQDXEzU57z#2:4 · sha256:883e0e89320f3a790ffb561d17ae10528fbba8ad08a277ad756f71d641b0265e</td><td>首頁 desktop 1440×3268</td><td><code>assets/rendered-captures/home-desktop-1440.png</code>；頁面為整張點陣圖，無圖層／Variables</td><td>High（視覺）／Medium（量測）</td></tr><tr><td>S2</td><td>Figma page raster</td><td>2</td><td>node <code>3:3</code> 基金公司 1</td><td>figma:T4Ddywb8e4bzFQDXEzU57z#3:3 · sha256:78d051aec867bd2476fb3bca607e0fba1a8ebed7d3e1de78bb557043d9b33aba</td><td>基金公司總覽 1440×1850</td><td><code>fund-companies-desktop-1440.png</code></td><td>High／Medium</td></tr><tr><td>S3</td><td>Figma page raster</td><td>2</td><td>node <code>3:7</code> 新手入門 1</td><td>figma:T4Ddywb8e4bzFQDXEzU57z#3:7 · sha256:38b36c813bb4edd3f90057bb9282801720d9d6e6e6a93d127900c1d1a4cc338d</td><td>新手入門分類頁 1440×1557</td><td><code>beginner-desktop-1440.png</code></td><td>High／Medium</td></tr><tr><td>S4</td><td>Figma page raster</td><td>2</td><td>node <code>3:12</code> 追求成長 2</td><td>figma:T4Ddywb8e4bzFQDXEzU57z#3:12 · sha256:9c1dd695ab32144e4d70e04d6a12f91540eae95e6a331340d5f6ec051d7085da</td><td>追求成長分類頁（縮圖 422×2400，原 1440×8192）</td><td><code>growth-category-overview-422w.png</code>；低解析，僅用於色票與版型；多數卡片圖片為空白佔位</td><td>Medium</td></tr><tr><td>S5</td><td>Figma page raster</td><td>2</td><td>node <code>3:9</code> 穩健配息 1</td><td>figma:T4Ddywb8e4bzFQDXEzU57z#3:9 · sha256:8b07961d09449a29246363b83bf14a303dc23c6584f094b619b359b1f1cf1e54</td><td>穩健配息分類頁（縮圖）</td><td><code>steady-dividend-overview-422w.png</code></td><td>Medium</td></tr><tr><td>S6</td><td>Figma brand brief（描述性需求文件）</td><td>7</td><td>node <code>3:23</code> 品牌視覺設計需求</td><td>figma:T4Ddywb8e4bzFQDXEzU57z#3:23</td><td>需求文字＋品牌個性表</td><td>非視覺證據；用於品牌個性與交付項目</td><td>High（內容）／不可作 token 來源</td></tr><tr><td>S7</td><td>Figma app screenshots（App 截圖）</td><td>2</td><td>nodes <code>3:13</code>–<code>3:18</code> IMG_1184–1189（390×844）</td><td>figma:T4Ddywb8e4bzFQDXEzU57z#page:abo-app-screens</td><td>6 張 iOS 截圖</td><td><strong>尚未逐張分析</strong>（本輪範圍排除），僅檢視縮圖</td><td>Low</td></tr><tr><td>S8</td><td>Figma logo / IP raster（Logo 與 IP 圖）</td><td>2</td><td>nodes <code>3:19</code> logo、<code>3:26</code>、<code>3:27</code> IP 圖</td><td>figma:T4Ddywb8e4bzFQDXEzU57z#page:abo-brand-assets</td><td>logo 127×130；IP 角色截圖</td><td><strong>尚未分析</strong>；僅從首頁輪播看到 6 種角色造型</td><td>Low</td></tr><tr><td>S9</td><td>Figma page raster</td><td>2</td><td>nodes <code>3:6</code> 多元配置、<code>3:8</code> 海外佈局、<code>3:5</code> 基金學堂、<code>3:4</code> 學堂內頁</td><td>figma:T4Ddywb8e4bzFQDXEzU57z#3:6, #3:8, #3:5, #3:4</td><td>其餘頁面</td><td><strong>本輪未擷取</strong>，列為 planned 來源</td><td>Low</td></tr></tbody></table></div>
+<h2 id="doc-design-evidence-map-md-source-duplicate-review">Source Duplicate Review</h2>
+<p>Use this table when two screenshots, graphic/brand exports, Figma nodes, routes, or other exports are exact duplicates or visually/functionally very close. Record the decision before counting both as separate evidence.</p>
+<div class="table-wrap"><table><thead><tr><th>Candidate source</th><th>Duplicate of</th><th>Match type</th><th>Fingerprint / normalized key</th><th>Suggested action</th><th>Developer decision</th><th>Rationale</th></tr></thead><tbody><tr><td>S4 追求成長 <code>3:12</code></td><td>S5 穩健配息 <code>3:9</code>（及 <code>3:6</code>、<code>3:8</code> 同模板頁）</td><td>版型高度相似（同一分類頁模板，僅色調與內容不同）</td><td>figma:T4Ddywb8e4bzFQDXEzU57z#3:12 ↔ figma:T4Ddywb8e4bzFQDXEzU57z#3:9</td><td>keep distinct for color evidence / reuse existing source for layout evidence</td><td>keep distinct（暫定，provisional；待開發者確認）</td><td>色票證據各自獨立（藍 vs 綠）；版型證據只計一次，避免重複基金卡片灌水信心</td></tr><tr><td>S3 新手入門 <code>3:7</code></td><td>S4 追求成長 <code>3:12</code></td><td>分類頁頭部與卡片結構相似，但配色不同（琥珀 vs 藍）</td><td>figma:T4Ddywb8e4bzFQDXEzU57z#3:7 ↔ figma:T4Ddywb8e4bzFQDXEzU57z#3:12</td><td>keep distinct</td><td>keep distinct（暫定，provisional；待開發者確認）</td><td>兩頁 CTA 與色條顏色不同，是本輪發現的重要不一致，需保留為獨立證據</td></tr></tbody></table></div>
+<h2 id="doc-design-evidence-map-md-vibe-project-scope-review-figma">Vibe Project Scope Review（本輪不適用：來源為 Figma 點陣圖，非程式專案）</h2>
+<p>Use this table when the input is an AI-generated or vibe-coded project. Record whether project evidence is rendered, screenshot, storybook, token-used, component-used, demo-only, unused, dead-code, capture-blocked, auth-blocked, contradictory, or out-of-scope before it influences confidence.</p>
+<div class="table-wrap"><table><thead><tr><th>Source</th><th>Classification</th><th>Visible in rendered UI</th><th>Token/component used</th><th>Keep / ignore decision</th><th>Rationale</th></tr></thead><tbody></tbody></table></div>
+<h2 id="doc-design-evidence-map-md-native-app-project-review">Native App Project Review</h2>
+<p>Use this table when the input is a native iOS or Android app project. Record whether native evidence is native-capture, native-preview, screenshot-test, native-token-used, native-component-used, native-source-only, native-capture-blocked, native-contradictory, out-of-scope, or explicitly kept/ignored before it influences confidence.</p>
+<div class="table-wrap"><table><thead><tr><th>Source</th><th>Classification</th><th>Visible in native capture / screenshot / preview</th><th>Token / component / resource used</th><th>Keep / ignore decision</th><th>Rationale</th></tr></thead><tbody></tbody></table></div>
+<h2 id="doc-design-evidence-map-md-route-state-manifest">Route / State Manifest</h2>
+<p>Use this table when extracting from a project folder with runnable routes or Storybook stories.</p>
+<div class="table-wrap"><table><thead><tr><th>Route or story</th><th>Viewport</th><th>State</th><th>Render command</th><th>Screenshot path</th><th>Source files</th><th>Capture status</th><th>Keep / ignore</th><th>Notes</th></tr></thead><tbody></tbody></table></div>
+<h2 id="doc-design-evidence-map-md-native-screen-state-manifest">Native Screen / State Manifest</h2>
+<p>Use this table when extracting from native iOS or Android screens, previews, screenshot tests, simulators, emulators, or supplied app captures.</p>
+<div class="table-wrap"><table><thead><tr><th>Platform</th><th>Screen or component</th><th>Source entrypoint</th><th>Device / viewport</th><th>State</th><th>Render/capture command</th><th>Screenshot path</th><th>Source files</th><th>Capture status</th><th>Keep / ignore</th><th>Notes</th></tr></thead><tbody></tbody></table></div>
+<h2 id="doc-design-evidence-map-md-rendered-ui-capture-attempts">Rendered UI Capture Attempts</h2>
+<p>Record every browser capture attempt for runnable projects, including blocked captures.</p>
+<div class="table-wrap"><table><thead><tr><th>Capture ID</th><th>Route or story</th><th>Viewport</th><th>State</th><th>URL</th><th>Screenshot path</th><th>DOM/CSS inspected</th><th>Source files linked</th><th>Status</th><th>Confidence impact</th></tr></thead><tbody></tbody></table></div>
+<h2 id="doc-design-evidence-map-md-native-ui-capture-attempts">Native UI Capture Attempts</h2>
+<p>Record every native capture attempt for simulator, emulator, device, preview, screenshot-test, or demo/gallery output, including blocked captures.</p>
+<div class="table-wrap"><table><thead><tr><th>Capture ID</th><th>Platform</th><th>Screen/component</th><th>Device</th><th>OS/API</th><th>Orientation</th><th>State</th><th>Command</th><th>Screenshot path</th><th>Source files linked</th><th>Status</th><th>Confidence impact</th></tr></thead><tbody></tbody></table></div>
+<h2 id="doc-design-evidence-map-md-evidence">Evidence</h2>
+<div class="table-wrap"><table><thead><tr><th>Evidence ID</th><th>Source ID</th><th>Region</th><th>Observed pattern</th><th>Design decision</th><th>Affected output</th><th>Confidence</th></tr></thead><tbody><tr><td>E1</td><td>S1,S2,S3</td><td>頁面底色、卡片、導覽列</td><td>暖米色系：區塊帶 #F7F0E2、卡片／導覽 #FCF8F1、hero #FAF7F1；新手入門頁底 #FEF7E8；邊線 #E7DCC6；白色僅用於搜尋框與 chip</td><td>以暖米色為品牌基底，白色作為「輸入／高亮」層</td><td>tokens-ref warm-*；sys background/surface/surface-band/outline</td><td>Medium（#FCF8F1 與 #FAF7F1 ΔE 0.74，可能是同一色）</td></tr><tr><td>E2</td><td>S1,S2,S3</td><td>logo 圖示、首頁主 CTA「開始測驗」、頁尾標題</td><td>金色 #C8901F（logo 圖示底、CTA 底、頁尾欄標題）</td><td>金色 #C8901F 為品牌主色</td><td>ref gold-55；sys primary</td><td>High（重複量測）</td></tr><tr><td>E3</td><td>S3</td><td>新手入門頁「看介紹」按鈕、badge、卡片頂部色條</td><td>琥珀色 #F5A525，與首頁 CTA 金色 #C8901F <strong>不同</strong></td><td>同為主要動作卻用兩種橘金；列為不一致，待品牌決定</td><td>ref gold-65；sys secondary</td><td>High（觀察）／決策待定</td></tr><tr><td>E4</td><td>S1,S2</td><td>標題、卡片標題、次要文字</td><td>標題 #182330、卡片標題 #1F2936、深色按鈕 #102B42、頁尾品牌字 #13243A；次要文字 #5B6B7E／#536475／#4B5563</td><td>現況用了多組相近深藍／灰藍；建議收斂</td><td>ref slate-*、navy-*；sys on-background/on-surface/text-secondary/text-tertiary</td><td>Medium（文字色由抗鋸齒像素取最頻色，可能有 ±2 誤差）</td></tr><tr><td>E5</td><td>S4,S5</td><td>分類頁頂部漸層、頁底色、按鈕</td><td>追求成長：底 #E6F0FB、頂 #D8E9F8、按鈕 #1C64AE；穩健配息：底 #E1F8F3、頂 #BBEDDF、按鈕 #007A64</td><td>每個分類有專屬色調（底色＋動作色）；多元配置、海外佈局未取樣</td><td>ref blue-*、green-*；sys category-growth-*、category-steady-*</td><td>Medium（縮圖取樣）；新手入門為琥珀</td></tr><tr><td>E6</td><td>S1,S2,S3</td><td>標題／內文字級</td><td>字高：hero H1 47px、首頁 H1 35px、首頁區塊標題 27px、卡片標題 17–19px、卡片 meta 14px</td><td>字級階層約 48／36／28／20／18／14（估算，±2px）；字體為思源黑體系（Noto Sans TC）視覺判斷</td><td>ref size-*、typeface；sys typescale-*</td><td>Low（由字高估算，非設計稿數值）</td></tr><tr><td>E7</td><td>S1,S2,S3</td><td>版面容器</td><td>1440 畫布；內容左右各 150px → 內容寬 1140；三欄卡片寬約 365、欄距 22；導覽列高 60；搜尋框 256×40、全圓角</td><td>內容寬 1140、三欄格線、導覽列 60</td><td>ref size-1140/1440/22/60；sys layout-*、spacing-*</td><td>Medium</td></tr><tr><td>E8</td><td>S1,S2,S3</td><td>卡片圓角</td><td>卡片圓角視覺約 12px、按鈕約 8px、搜尋框／chip 全圓角</td><td>radius 8／12／full</td><td>ref radius-*；sys shape-corner-*</td><td>Low（目測）</td></tr><tr><td>E9</td><td>S1,S2,S3,S4</td><td>基金／公司卡片圖片</td><td>深藍黑底＋金色光的 AI 風格財經插圖（城市、金庫、地球、山）；首頁精選基金為冷藍色調；新手入門頁出現青藍色圖</td><td>圖像風格偏「暗色科幻」，與「親切、不冷冰冰」品牌個性有落差；同站色調不一致</td><td>DESIGN_ELEMENTS Imagery；ANTI_AI_STYLE_RULES</td><td>High（觀察）</td></tr><tr><td>E10</td><td>S1</td><td>首頁快問快答輪播</td><td>6 種 3D 公仔 IP 造型（綠衣、深色上衣、紅色福神、藍帽、藍背景男生…），白色圓角框、彩色背景各異</td><td>IP 風格大致統一為 3D 卡通，但配色與主題（福神）不一致</td><td>COMPONENT_INVENTORY ip-avatar-carousel</td><td>Medium</td></tr><tr><td>E11</td><td>S1,S2</td><td>公司卡片（圖＋名稱＋法人名＋統計）</td><td>圖上方、名稱粗體深藍、法人全名灰藍、統計金色文字；白底卡片；3 欄</td><td>公司卡片規格</td><td>components/fund-company-card.md</td><td>High</td></tr><tr><td>E12</td><td>S1,S2,S3</td><td>導覽列</td><td>logo 左、8 個導覽項居中（窄欄位造成 2 字換行，如「首/頁」「新手入/門」）、搜尋框右；底部邊線 #E7DCC6</td><td>導覽列規格；<strong>導覽項換行是瑕疵</strong></td><td>components/site-header.md</td><td>High</td></tr><tr><td>E13</td><td>S6</td><td>品牌個性表</td><td>親切好懂／專業可靠／中立透明／有點聰明的小驚喜；不要輕浮、冷冰冰、推銷感、賭博感</td><td>作為 principles 的依據；與暗色科幻圖像、福神 IP 有衝突</td><td>DESIGN_PRINCIPLES</td><td>High（內容）</td></tr></tbody></table></div>
+    </section>
+<section class="panel" id="doc-design-principles-md">
+      <span class="source">DESIGN_PRINCIPLES.md</span>
+      <h1 id="doc-design-principles-md-design-principles">Design Principles</h1>
+<p>Write exactly 5-7 principles extracted from the references.</p>
+<p>Each principle must include:</p>
+<ul><li>observed evidence</li><li>implementation rule</li><li>do / don't guidance</li></ul>
+<div class="table-wrap"><table><thead><tr><th>#</th><th>Principle</th><th>Evidence</th><th>Implementation rule</th><th>Do</th><th>Don't</th></tr></thead><tbody><tr><td>1</td><td>暖米色為底，金色為記號</td><td>E1,E2</td><td>頁面底用 warm 系（background/surface/surface-band），主色 <code>primary</code>（金）只用於 logo、主 CTA、標題強調、數字／連結</td><td>用金色標出「重點」：CTA、統計數字、欄標題</td><td>不要大面積鋪金色；不要在同一畫面混用 #C8901F 與 #F5A525 兩種主按鈕色</td></tr><tr><td>2</td><td>深藍黑文字帶來「第二眼的信任感」</td><td>E4,E13</td><td>標題與正文用深藍黑（<code>on-background</code>），次要文字用灰藍（<code>text-secondary/tertiary</code>），對應品牌個性「專業、可靠」</td><td>以字重（700/900）建立層級，而不是多種顏色</td><td>不要再新增新的灰藍／深藍變體（現況已有 3＋3 種近似色）</td></tr><tr><td>3</td><td>卡片是資訊容器：圖在上、文字在下、一個動作</td><td>E9,E11</td><td>基金／公司／文章皆為「縮圖＋粗體名稱＋輔助資訊＋單一動作」的卡片；三欄格線、欄距 22</td><td>同類資訊使用同一種卡片結構</td><td>不要把列表列（row）做成卡片；不要在卡片內再套卡片</td></tr><tr><td>4</td><td>每個分類有專屬色調，但骨架一致</td><td>E5</td><td>分類頁共用同一骨架（麵包屑、badge、H1、副標、適合對象面板、卡片格線），只替換 category 色（底、hero、動作色）</td><td>新增分類時只新增一組 <code>category-*</code> token</td><td>不要為單一分類改版型；不要讓新手入門（琥珀）與其他分類的 CTA 邏輯不一致（待決定）</td></tr><tr><td>5</td><td>白話優先的文字層級</td><td>E6,E13</td><td>大標＋一行白話副標；卡片以 14px 灰藍小字補充（風險等級 RR、系列數）；不使用誇大字眼</td><td>風險等級（RR）以中性 chip 呈現</td><td>不要用紅綠暗示報酬；不要使用「爆賺」「穩賺」等賭博感用語</td></tr><tr><td>6</td><td>IP 角色負責「親近感」，且不得削弱可信度</td><td>E10,E13</td><td>角色用於快問快答輪播與空狀態等「陪伴」位置，放在白色圓角框內</td><td>角色表情與姿勢保持友善、聰明的小驚喜</td><td>不要使用福神／財神類造型（有賭博暗示）；不要讓角色出現在風險說明區</td></tr><tr><td>7</td><td>圖像風格需與品牌個性對齊（目前待決定）</td><td>E9,E13</td><td>現況以暗色科幻財經插圖作為卡片頭圖；與「親切、不冷冰冰」有落差，<strong>列為待決定項目，非規範</strong></td><td>在品牌定調前，沿用現有圖片但不再新增同風格圖</td><td>不要把暗色科幻風格寫成品牌圖像規範</td></tr></tbody></table></div>
+    </section>
+<section class="panel" id="doc-design-elements-md">
+      <span class="source">DESIGN_ELEMENTS.md</span>
+      <h1 id="doc-design-elements-md-design-elements">Design Elements</h1>
+<h2 id="doc-design-elements-md-color-system">Color System</h2>
+<div class="table-wrap"><table><thead><tr><th>Role</th><th>Recommended value</th><th>Usage</th><th>Evidence / rationale</th></tr></thead><tbody><tr><td>background</td><td>warm-96 #FAF7F1</td><td>頁面底（首頁 hero）</td><td>E1</td></tr><tr><td>surface</td><td>warm-97 #FCF8F1</td><td>卡片、導覽列</td><td>E1</td></tr><tr><td>surface-band</td><td>warm-95 #F7F0E2</td><td>首頁區塊帶、頁尾</td><td>E1</td></tr><tr><td>outline</td><td>warm-90 #E7DCC6</td><td>導覽列／區塊分隔線</td><td>E1</td></tr><tr><td>primary</td><td>gold-55 #C8901F</td><td>logo、主 CTA、頁尾欄標題</td><td>E2</td></tr><tr><td>secondary（暫定）</td><td>gold-65 #F5A525</td><td>新手入門頁 CTA 與色條；<strong>與 primary 是否合併待決定</strong></td><td>E3</td></tr><tr><td>text-link</td><td>gold-35 #8A5A0F</td><td>頁尾、金色連結文字</td><td>E3</td></tr><tr><td>on-background</td><td>slate-12 #182330</td><td>標題</td><td>E4</td></tr><tr><td>text-secondary / tertiary</td><td>slate-35 #4B5563 / slate-45 #5B6B7E</td><td>說明文字、副標</td><td>E4</td></tr><tr><td>inverse</td><td>navy-16 #102B42</td><td>深色按鈕（閱讀完整指南）</td><td>E4</td></tr><tr><td>category growth / steady</td><td>blue-95 #E6F0FB／blue-40 #1C64AE；green-95 #E1F8F3／green-40 #007A64</td><td>分類頁背景與動作色；多元配置、海外佈局未取樣</td><td>E5</td></tr></tbody></table></div>
+<p>Document palette families with <code>100</code> as the lightest step and <code>0</code> as the darkest step. Note any close colors that need a merge/keep-distinct decision in <code>TOKEN_ARCHITECTURE.md</code>.</p>
+<h2 id="doc-design-elements-md-typography">Typography</h2>
+<div class="table-wrap"><table><thead><tr><th>Role</th><th>Font / weight / size guidance</th><th>Usage</th><th>Evidence / rationale</th></tr></thead><tbody><tr><td>display</td><td>Noto Sans TC 900 / 48px</td><td>分類頁 H1</td><td>E6（字高 47px，估算）</td></tr><tr><td>headline</td><td>Noto Sans TC 900 / 36px</td><td>首頁主標</td><td>E6（字高 35px，估算）</td></tr><tr><td>title-large</td><td>Noto Sans TC 700 / 28px</td><td>區塊標題（今日精選基金…）</td><td>E6</td></tr><tr><td>title-medium / small</td><td>Noto Sans TC 700 / 20px、18px</td><td>卡片標題（基金卡 20px，公司卡 18px，<strong>建議收斂</strong>）</td><td>E6</td></tr><tr><td>body</td><td>Noto Sans TC 400 / 16px</td><td>說明文字</td><td>E6（推估）</td></tr><tr><td>label / metadata</td><td>Noto Sans TC 500–700 / 14px、12px</td><td>統計、RR chip、版權說明</td><td>E6</td></tr></tbody></table></div>
+<p>字體為視覺判斷（Noto Sans TC 風格），Figma 為點陣圖，<strong>無法讀取實際字體名稱</strong>，須由設計師確認。</p>
+<h2 id="doc-design-elements-md-typographic-composition-text-lockups">Typographic Composition / Text Lockups</h2>
+<p>Document recurring text groupings separately from atomic typography. Include slot order, hierarchy, scale relationship, spacing, alignment, max line length, line-break behavior, color pairing, and language/script behavior.</p>
+<div class="table-wrap"><table><thead><tr><th>Pattern</th><th>Slots</th><th>Composition rule</th><th>Evidence / rationale</th><th>Component candidate</th></tr></thead><tbody><tr><td>分類頁頭</td><td>breadcrumb → badge → H1 → 副標</td><td>左對齊，內容寬 1140 起算於 x=150；右側為「這類基金適合」面板</td><td>E5</td><td>category-hero（planned）</td></tr><tr><td>區塊標題</td><td>標題＋灰藍說明句</td><td>28px 標題、其下一行說明</td><td>E6</td><td>section-heading（planned）</td></tr><tr><td>公司卡片文字</td><td>名稱／法人全名／統計</td><td>18px 粗體、14px 灰藍、14px 金色統計（以「・」分隔）</td><td>E11</td><td>fund-company-card</td></tr><tr><td>精選主題</td><td>金色小標「本週主題」→ 大標 → 內文 → 深色按鈕</td><td>左對齊，大標約 28px</td><td>E6</td><td>topic-feature（planned）</td></tr></tbody></table></div>
+<h2 id="doc-design-elements-md-shape-and-corners">Shape And Corners</h2>
+<div class="table-wrap"><table><thead><tr><th>Role</th><th>Value</th><th>Usage</th><th>Evidence / rationale</th></tr></thead><tbody><tr><td>corner-sm</td><td>8px</td><td>按鈕</td><td>E8（目測，Low）</td></tr><tr><td>corner-md</td><td>12px</td><td>卡片</td><td>E8（目測，Low）</td></tr><tr><td>corner-full</td><td>999px</td><td>搜尋框、chip、快問快答 pill</td><td>E8</td></tr></tbody></table></div>
+<h2 id="doc-design-elements-md-spacing-and-density">Spacing And Density</h2>
+<div class="table-wrap"><table><thead><tr><th>Role</th><th>Value</th><th>Usage</th><th>Evidence / rationale</th></tr></thead><tbody><tr><td>layout-viewport</td><td>1440px</td><td>桌面畫布</td><td>E7</td></tr><tr><td>content-width</td><td>1140px（左右留白 150px）</td><td>主內容寬</td><td>E7</td></tr><tr><td>gap-grid</td><td>22px</td><td>三欄卡片欄距（實測；與 24px 接近，待確認）</td><td>E7</td></tr><tr><td>header-height</td><td>60px</td><td>導覽列</td><td>E7</td></tr><tr><td>gap-sm / gap-md</td><td>8px / 16px</td><td>元素間距（推估，Low）</td><td>E7</td></tr></tbody></table></div>
+<p>Record close spacing, sizing, type, radius, opacity, or motion values that need developer confirmation before becoming separate reference tokens.</p>
+<h2 id="doc-design-elements-md-elevation-and-depth">Elevation And Depth</h2>
+<div class="table-wrap"><table><thead><tr><th>Role</th><th>Value</th><th>Usage</th><th>Evidence / rationale</th></tr></thead><tbody><tr><td>卡片陰影</td><td>極淡的暖色陰影（僅觀察到，未量測數值，<strong>不建立 token</strong>）</td><td>卡片、輸入框</td><td>E1,E2（目測）；陰影數值需設計師提供</td></tr></tbody></table></div>
+<h2 id="doc-design-elements-md-iconography-and-imagery">Iconography And Imagery</h2>
+<p>Document icon style, media style, illustration/photo rules, and accessibility expectations.</p>
+<h3 id="doc-design-elements-md-section">圖像觀察（本輪僅記錄，不寫成規範）</h3>
+<ul><li>基金／公司卡片頭圖：深藍黑底＋金色光的 AI 生成財經插圖，風格偏「暗色科幻」；首頁精選基金偏冷藍、新手入門頁出現青藍色（E9）。與品牌個性「親切、不冷冰冰」有落差。</li><li>空狀態：追求成長、穩健配息頁大量卡片頭圖為空白佔位（S4、S5），屬於<strong>未完成稿</strong>，不可當作設計規範。</li><li>IP 角色：首頁輪播 6 種 3D 公仔造型（E10），包含紅色福神造型，與「不賭博感」有衝突。</li><li>圖示：僅觀察到搜尋、箭頭、時鐘等細線條圖示；樣式未量測。</li></ul>
+    </section>
+<section class="panel" id="doc-token-architecture-md">
+      <span class="source">TOKEN_ARCHITECTURE.md</span>
+      <h1 id="doc-token-architecture-md-token-architecture-token">Token Architecture（Token 架構）</h1>
+<p>&gt; <strong>Baseline 狀態</strong>：本套 tokens 全為 <code>measured</code>（Figma 檔無 Variables、頁面為點陣圖，以像素取樣量測）。它描述「現況」，<strong>不是已核准的品牌規範</strong>；品牌配色定案後須走 Late-Arriving Authoritative Source Pass 重新校準。</p>
+<p>Document the token layers, prefixes, naming model, and audit rules for this package.</p>
+<h2 id="doc-token-architecture-md-prefixes">Prefixes</h2>
+<div class="table-wrap"><table><thead><tr><th>Layer</th><th>Prefix</th><th>Responsibility</th></tr></thead><tbody><tr><td>Reference</td><td><code>--md-ref-*</code></td><td>Raw values only</td></tr><tr><td>System</td><td><code>--md-sys-*</code></td><td>Shared semantic roles</td></tr><tr><td>Component</td><td><code>--md-comp-*</code></td><td>Component and region slots</td></tr></tbody></table></div>
+<h2 id="doc-token-architecture-md-inheritance">Inheritance</h2>
+<pre><code data-lang="txt">component token -&gt; system token -&gt; reference value</code></pre>
+<h2 id="doc-token-architecture-md-reference-color-scale">Reference Color Scale</h2>
+<p>Use numeric palette steps from light to dark:</p>
+<pre><code data-lang="txt">100 -&gt; 0</code></pre>
+<ul><li><code>100</code> is the lightest visible step in a palette family.</li><li><code>0</code> is the darkest visible step in a palette family.</li><li>Higher numbers must be visually lighter than lower numbers in the same family.</li><li>Semantic color names belong in <code>sys</code>, not <code>ref</code>.</li></ul>
+<h2 id="doc-token-architecture-md-layer-rules">Layer Rules</h2>
+<div class="table-wrap"><table><thead><tr><th>Layer</th><th>Allowed</th><th>Forbidden</th></tr></thead><tbody><tr><td>Reference</td><td>raw color steps, sizes, weights, radius, opacity</td><td>semantic roles, component names</td></tr><tr><td>System</td><td>shared roles, foreground/background pairs, spacing roles</td><td>component anatomy</td></tr><tr><td>Component</td><td>component slots and states</td><td>raw values, direct reference values</td></tr></tbody></table></div>
+<h2 id="doc-token-architecture-md-near-token-decisions">Near Token Decisions</h2>
+<p>Use this table when candidate reference tokens are visually or numerically close. Stop and confirm with the developer before finalizing unresolved rows.</p>
+<p>Provenance is <code>authored</code> (Figma Variable/style, design-system export, source-code token — no measurement error) or <code>measured</code> (screenshot sampling, pixel measurement). <code>measured</code> vs <code>measured</code> may merge through normal review; when either side is <code>authored</code>, default to keep distinct and never round the authored value away; <code>authored</code> vs <code>authored</code> always requires an explicit developer decision.</p>
+<div class="table-wrap"><table><thead><tr><th>Candidate A</th><th>Provenance A</th><th>Candidate B</th><th>Provenance B</th><th>Difference</th><th>Decision (<code>merge</code> / <code>keep distinct</code>)</th><th>Rationale</th><th>Confirmed by</th></tr></thead><tbody><tr><td><code>--md-ref-color-warm-98</code> #FEF7E8</td><td>measured</td><td><code>--md-ref-color-warm-95</code> #F7F0E2</td><td>measured</td><td>ΔE 2.46</td><td>keep distinct（保留區分）</td><td>新手入門頁底色 vs 首頁區塊帶色，為不同頁面的不同區域；品牌定調前不合併（provisional）</td><td>pending developer（待開發者確認）</td></tr><tr><td><code>--md-ref-color-warm-97</code> #FCF8F1</td><td>measured</td><td><code>--md-ref-color-warm-96</code> #FAF7F1</td><td>measured</td><td>ΔE 0.74</td><td>keep distinct（保留區分）</td><td>卡片／導覽列表面 vs 首頁 hero 背景；差異可能只是量測雜訊，<strong>建議品牌定調後合併</strong>（provisional）</td><td>pending developer（待開發者確認）</td></tr><tr><td><code>--md-ref-color-slate-15</code> #1F2936</td><td>measured</td><td><code>--md-ref-color-slate-12</code> #182330</td><td>measured</td><td>ΔE 2.96</td><td>keep distinct（保留區分）</td><td>卡片標題 vs 首頁標題文字；近似深藍黑，<strong>建議合併為單一標題色</strong>（provisional）</td><td>pending developer（待開發者確認）</td></tr><tr><td><code>--md-ref-size-12</code> 12px</td><td>measured</td><td><code>--md-ref-size-14</code> 14px</td><td>measured</td><td>2px</td><td>keep distinct（保留區分）</td><td>metadata 與 label 字級，皆為字高估算（±2px），Low confidence</td><td>pending developer（待開發者確認）</td></tr><tr><td><code>--md-ref-size-14</code> 14px</td><td>measured</td><td><code>--md-ref-size-16</code> 16px</td><td>measured</td><td>2px</td><td>keep distinct（保留區分）</td><td>label 與 body 字級，字高估算</td><td>pending developer（待開發者確認）</td></tr><tr><td><code>--md-ref-size-16</code> 16px</td><td>measured</td><td><code>--md-ref-size-18</code> 18px</td><td>measured</td><td>2px</td><td>keep distinct（保留區分）</td><td>body 與 title-small（公司卡片名稱 h=17）字級</td><td>pending developer（待開發者確認）</td></tr><tr><td><code>--md-ref-size-18</code> 18px</td><td>measured</td><td><code>--md-ref-size-20</code> 20px</td><td>measured</td><td>2px</td><td>keep distinct（保留區分）</td><td>公司卡片名稱（h=17）與基金卡片標題（h=19）；建議收斂為單一標題字級</td><td>pending developer（待開發者確認）</td></tr><tr><td><code>--md-ref-size-20</code> 20px</td><td>measured</td><td><code>--md-ref-size-22</code> 22px</td><td>measured</td><td>2px</td><td>keep distinct（保留區分）</td><td>22 為卡片格線間距（實測 22），20 為字級，不同 token family，不應合併</td><td>pending developer（待開發者確認）</td></tr></tbody></table></div>
+<h3 id="doc-token-architecture-md-audit">未被 audit 標出、但觀察到的近似色（供討論）</h3>
+<div class="table-wrap"><table><thead><tr><th>群組</th><th>觀察到的值</th><th>備註</th></tr></thead><tbody><tr><td>次要文字灰藍</td><td>#5B6B7E（新手入門 hero 副標）、#536475（首頁副標）、#4B5563（卡片說明）</td><td>三種灰藍用在同一角色（次要文字），強烈建議合併成一個</td></tr><tr><td>深藍</td><td>#102B42（深色按鈕）、#13243A（頁尾品牌字）、#182330（標題）</td><td>三種近似深藍，建議收斂</td></tr><tr><td>金色</td><td>#C8901F（logo／CTA／頁尾標題）、#F5A525（新手入門頁 CTA 與頂部色條）、#8A5A0F（金色連結文字）</td><td>#C8901F 與 #F5A525 是<strong>不同色相明度</strong>，同為「主要按鈕」卻不一致 → 品牌定調時需決定主 CTA 色</td></tr><tr><td>淡金背景</td><td>#FEF1CF、#FDEFC4、#F7E5BE</td><td>皆為新手入門頁 hero／chip，hero 為 #FEF5E3→#F7E5BE 漸層</td></tr></tbody></table></div>
+<h2 id="doc-token-architecture-md-accessibility-remap-decisions">Accessibility Remap Decisions</h2>
+<p>Use this table when an authored value fails an accessibility requirement (for example WCAG AA contrast) and the shipped value must differ. Keep the authored value as its own <code>ref</code> token, map the <code>sys</code> role to the accessible value, and add an <code>a11y-remap</code> CSS comment linking the two. Downstream parity tooling reads these rows to classify the difference as <code>required-adaptation</code> instead of drift.</p>
+<div class="table-wrap"><table><thead><tr><th>Decision ID</th><th>Authored value (ref token)</th><th>Authored contrast</th><th>Accessible value (ref token)</th><th>Accessible contrast</th><th>Affected sys/comp tokens</th><th>Rationale</th><th>Confirmed by</th></tr></thead><tbody></tbody></table></div>
+<h2 id="doc-token-architecture-md-token-recalibration">Token Recalibration</h2>
+<p>Use this table when a higher-tier authoritative source (for example production Figma with Variables) arrives after tokens were finalized from lower-tier evidence. List every affected token, recommend <code>merge</code> (measured collapses into the authored value), <code>keep distinct</code>, or <code>re-authorize</code> (replace the token value with the authored value), and get developer adjudication before applying changes.</p>
+<div class="table-wrap"><table><thead><tr><th>Token</th><th>Current value (provenance)</th><th>Authoritative value (source)</th><th>Delta</th><th>Recommendation</th><th>Developer decision</th><th>Follow-up</th></tr></thead><tbody></tbody></table></div>
+<h2 id="doc-token-architecture-md-native-unit-and-source-mapping">Native Unit And Source Mapping</h2>
+<p>Use this table for native iOS/Android projects when source values use platform units or platform token/resource files.</p>
+<div class="table-wrap"><table><thead><tr><th>Canonical token</th><th>Native source token/resource</th><th>Platform/unit</th><th>Source file</th><th>Evidence screen/capture</th><th>Mapping or conversion note</th></tr></thead><tbody></tbody></table></div>
+<h2 id="doc-token-architecture-md-required-audit">Required Audit</h2>
+<ul><li>No component token references a reference token directly.</li><li>No system token name includes component anatomy.</li><li>No reference token name includes semantic roles.</li><li>Reference color steps follow <code>100</code> lightest to <code>0</code> darkest.</li><li>Near reference colors and numbers have a documented merge or keep-distinct decision that records both provenances; pairs involving an <code>authored</code> value default to keep distinct.</li><li>Accessibility remaps keep the authored value as a <code>ref</code> token and carry an <code>a11y-remap</code> record; the shipped <code>sys</code> mapping points at the accessible value.</li><li>Every background-like system color has a matching foreground pair.</li><li>For vibe-coded projects, values found only in unused CSS, demo-only components, dead code, or blocked captures are not promoted to tokens unless a keep decision is recorded in <code>DESIGN_EVIDENCE_MAP.md</code>.</li><li>For native app projects, values found only in source-only views, unused previews, blocked captures, or unverified resources are not promoted to tokens unless a keep decision is recorded in <code>DESIGN_EVIDENCE_MAP.md</code>.</li></ul>
+    </section>
+<section class="panel" id="doc-component-inventory-md">
+      <span class="source">COMPONENT_INVENTORY.md</span>
+      <h1 id="doc-component-inventory-md-component-inventory">Component Inventory</h1>
+<p>Inventory repeated components and UI, graphic, layout, and typographic patterns from the references.</p>
+<div class="table-wrap"><table><thead><tr><th>Component</th><th>Seen in</th><th>Status</th><th>Priority</th><th>Fingerprint summary</th><th>Required tokens</th><th>Missing states / modes</th><th>Notes</th></tr></thead><tbody><tr><td>site-header</td><td>S1,S2,S3</td><td>extracted</td><td>High</td><td>logo 左＋8 項導覽＋全圓角搜尋框；底部 1px 邊線</td><td>surface、outline、on-background、surface-bright、corner-full</td><td>hover／active（目前頁）／focus 未見於稿</td><td>導覽項因欄寬不足造成 2 字換行（「首/頁」），屬瑕疵；spec: <code>components/site-header.md</code></td></tr><tr><td>fund-company-card</td><td>S1,S2</td><td>extracted</td><td>High</td><td>頭圖＋公司簡稱＋法人全名＋「N 檔基金・M 個系列」；3 欄</td><td>surface-bright、corner-md、text-link、text-tertiary</td><td>hover／focus 未見</td><td>首頁的精簡版（無頭圖）與總覽頁完整版待決定是否為 variant；spec: <code>components/fund-company-card.md</code></td></tr><tr><td>button</td><td>S1,S3</td><td>planned</td><td>High</td><td>4 種：金色實心大按鈕（開始測驗）、琥珀小按鈕（看介紹）、深藍實心（閱讀完整指南）、描邊（看全部文章）</td><td>primary、secondary、inverse、outline</td><td>hover／pressed／disabled／focus 全缺</td><td><strong>需決定主按鈕色（金 vs 琥珀）</strong>，見 Similarity Review</td></tr><tr><td>fund-card</td><td>S1,S3,S4</td><td>planned</td><td>High</td><td>頭圖＋名稱＋RR／類型 meta＋（類別頁含 chip 與按鈕）</td><td>surface、corner-md、category-*</td><td>空圖狀態（S4、S5 大量空白佔位）</td><td>首頁精選與分類頁卡片差異大，見 Similarity Review</td></tr><tr><td>article-card</td><td>S1</td><td>planned</td><td>Medium</td><td>金色小標＋標題＋閱讀時間；4 欄</td><td>surface、text-link</td><td>—</td><td>無圖片，與 fund-card 結構不同</td></tr><tr><td>category-hero</td><td>S3,S4,S5</td><td>planned</td><td>High</td><td>breadcrumb＋badge＋H1＋副標＋適合對象面板＋漸層背景</td><td>category-*、gold-*</td><td>—</td><td>每類別換色；新手入門用琥珀、其他用藍／綠</td></tr><tr><td>risk-chip（RR 標示）</td><td>S3</td><td>planned</td><td>High</td><td>金色小 chip「RR4」，淡金底</td><td>accent-container、on-accent-container</td><td>各風險等級 RR1–RR5 的色彩規則未見（皆同色）</td><td>金融關鍵元件，需設計 RR 語意（避免紅綠暗示報酬）</td></tr><tr><td>quiz-hero（快問快答）</td><td>S1</td><td>planned</td><td>High</td><td>pill 標籤＋標題＋說明＋IP 輪播＋主 CTA＋免責小字</td><td>primary、surface-bright</td><td>選項／結果頁未在稿中</td><td>核心轉換區</td></tr><tr><td>ip-avatar-carousel</td><td>S1,S8</td><td>planned</td><td>Medium</td><td>6 張白框圓角卡，內為 3D 公仔</td><td>surface-bright、corner-md</td><td>—</td><td>圖像素材，IP 尚未定案</td></tr><tr><td>topic-feature</td><td>S1</td><td>planned</td><td>Medium</td><td>金色小標＋大標＋內文＋深色按鈕＋3 張連結卡</td><td>surface-band、inverse</td><td>—</td><td>—</td></tr><tr><td>site-footer</td><td>S1,S2,S3</td><td>planned</td><td>Medium</td><td>品牌＋說明＋3 欄連結＋免責聲明</td><td>surface-band、text-link</td><td>—</td><td>免責文字為金融合規必要資訊</td></tr><tr><td>breadcrumb</td><td>S2,S3</td><td>planned</td><td>Low</td><td>金色首頁連結＋「›」＋灰藍目前頁</td><td>text-link、text-tertiary</td><td>—</td><td>—</td></tr><tr><td>fund-article-detail</td><td>S9</td><td>blocked</td><td>Medium</td><td>基金學堂內頁（3:4）</td><td>—</td><td>—</td><td>本輪未擷取，無證據</td></tr></tbody></table></div>
+<p>Status values: <code>extracted</code>, <code>planned</code>, <code>blocked</code>, <code>out-of-scope</code>.</p>
+<h2 id="doc-component-inventory-md-component-similarity-review">Component Similarity Review</h2>
+<p>Use this table when a newly observed component is visually, structurally, behaviorally, or compositionally close to an existing component. Stop and confirm unresolved rows before creating another component spec.</p>
+<div class="table-wrap"><table><thead><tr><th>New candidate</th><th>Similar existing component</th><th>Visual reference</th><th>Similarity reason</th><th>Suggested action</th><th>Developer decision (<code>merge</code> / <code>make variant</code> / <code>keep distinct</code> / <code>blocked</code>)</th><th>Rationale / owner</th></tr></thead><tbody><tr><td>button（琥珀「看介紹」）</td><td>button（金色「開始測驗」）</td><td><img class="doc-image" src="assets/component-review/button-amber-beginner-see-intro.png" alt="看介紹" loading="lazy"> <img class="doc-image" src="assets/component-review/button-primary-gold-home-cta.png" alt="開始測驗" loading="lazy"></td><td>同為主要動作，色相相近但 #F5A525 與 #C8901F 不同；尺寸與圓角不同</td><td>make variant（建議：size=lg／md；色彩先收斂為單一 primary）</td><td>blocked（待開發者決定，pending developer）</td><td>需先決定品牌主 CTA 色</td></tr><tr><td>fund-company-card（首頁精簡版）</td><td>fund-company-card（總覽頁完整版）</td><td><img class="doc-image" src="assets/component-review/fund-company-card-compact-home.png" alt="首頁精簡版" loading="lazy"> <img class="doc-image" src="assets/component-review/fund-company-card-full-overview.png" alt="總覽頁完整版" loading="lazy"></td><td>同為公司入口卡片；首頁版無頭圖、4 欄，總覽版有頭圖、3 欄</td><td>make variant（density=compact）</td><td>blocked（待開發者決定，pending developer）</td><td>—</td></tr><tr><td>fund-card（分類頁）</td><td>fund-card（首頁精選）</td><td><img class="doc-image" src="assets/component-review/fund-card-home-featured.png" alt="首頁精選" loading="lazy"> <img class="doc-image" src="assets/component-review/fund-card-category-beginner.png" alt="分類頁" loading="lazy"></td><td>同為基金卡；分類頁多了 chip＋按鈕＋頂部色條</td><td>make variant</td><td>blocked（待開發者決定，pending developer）</td><td>首頁卡片資訊較少（無按鈕）</td></tr><tr><td>article-card</td><td>fund-card</td><td><img class="doc-image" src="assets/component-review/article-card-home.png" alt="文章卡" loading="lazy"></td><td>皆為卡片容器，但文章卡無圖、用途不同</td><td>keep distinct</td><td>blocked（待開發者決定，pending developer）</td><td>內容結構不同</td></tr></tbody></table></div>
+<p>Visual references must point to source-based previews when available, such as actual Figma node screenshots or screenshot crops saved under <code>assets/component-review/</code>. A schematic SVG is allowed only as a last-resort fallback when source previews cannot be captured, and it must be labeled <code>schematic fallback - source preview unavailable</code>.</p>
+    </section>
+<section class="panel" id="doc-component-spec-template-md">
+      <span class="source">COMPONENT_SPEC_TEMPLATE.md</span>
+      <h1 id="doc-component-spec-template-md-component-spec-template">Component Spec Template</h1>
+<p>Copy this template to <code>design-system/components/&lt;component-name&gt;.md</code> for each extracted component.</p>
+<h2 id="doc-component-spec-template-md-purpose">Purpose</h2>
+<h2 id="doc-component-spec-template-md-evidence">Evidence</h2>
+<div class="table-wrap"><table><thead><tr><th>Evidence ID</th><th>Source</th><th>Region</th><th>Notes</th></tr></thead><tbody></tbody></table></div>
+<h2 id="doc-component-spec-template-md-component-fingerprint">Component Fingerprint</h2>
+<div class="table-wrap"><table><thead><tr><th>Dimension</th><th>Description</th></tr></thead><tbody><tr><td>Purpose / behavior / composition role</td><td></td></tr><tr><td>Anatomy</td><td></td></tr><tr><td>Variants / states / modes</td><td></td></tr><tr><td>Token contract summary</td><td></td></tr><tr><td>Layout / density</td><td></td></tr><tr><td>Visual reference</td><td></td></tr><tr><td>Native platform mapping</td><td></td></tr><tr><td>Similar components reviewed</td><td></td></tr></tbody></table></div>
+<h2 id="doc-component-spec-template-md-anatomy">Anatomy</h2>
+<h2 id="doc-component-spec-template-md-variants">Variants</h2>
+<h2 id="doc-component-spec-template-md-states">States</h2>
+<p>Default, hover, pressed, focus-visible, disabled, selected/active, loading, error as applicable. For display-only, graphic, or typographic components, mark interactive states as <code>not applicable</code> and document observed modes such as scale, emphasis, alignment, theme, responsive wrapping, or language/script behavior.</p>
+<h2 id="doc-component-spec-template-md-token-contract">Token Contract</h2>
+<div class="table-wrap"><table><thead><tr><th>Component token</th><th>Maps to system token</th><th>Purpose</th><th>State / mode</th></tr></thead><tbody></tbody></table></div>
+<h2 id="doc-component-spec-template-md-layout-rules">Layout Rules</h2>
+<p>Include slot order, hierarchy ratio, alignment, line count, max line length, line-break behavior, gap, padding, and responsive behavior when this is a typographic component or text lockup.</p>
+<h2 id="doc-component-spec-template-md-content-rules">Content Rules</h2>
+<h2 id="doc-component-spec-template-md-accessibility-rules">Accessibility Rules</h2>
+<h2 id="doc-component-spec-template-md-do-don-t">Do / Don't</h2>
+<h2 id="doc-component-spec-template-md-implementation-notes">Implementation Notes</h2>
+<p>For native iOS/Android sources, include SwiftUI/UIKit/Compose/Android View/XML names, resource files, preview/screenshot-test/capture evidence, and platform accessibility or dynamic type/font-scale notes when applicable.</p>
+    </section>
+<section class="panel" id="doc-interaction-states-md">
+      <span class="source">INTERACTION_STATES.md</span>
+      <h1 id="doc-interaction-states-md-interaction-states">Interaction States</h1>
+<p>Document global state behavior and token usage.</p>
+<div class="table-wrap"><table><thead><tr><th>State</th><th>Visual behavior</th><th>Required tokens</th><th>Accessibility notes</th></tr></thead><tbody><tr><td>Default</td><td>如稿</td><td>見各元件 token</td><td>對比需實作時驗證</td></tr><tr><td>Hover</td><td><strong>not evidenced</strong>（稿為靜態點陣圖）</td><td>—</td><td>—</td></tr><tr><td>Pressed</td><td><strong>not evidenced</strong></td><td>—</td><td>—</td></tr><tr><td>Focus-visible</td><td><strong>not evidenced</strong>；實作時必須補上</td><td>—</td><td>鍵盤可見焦點為必要</td></tr><tr><td>Disabled</td><td><strong>not evidenced</strong></td><td>—</td><td>—</td></tr><tr><td>Selected / active</td><td>新手入門頁第一張卡片有金色描邊，可能為 hover／selected 示意，但<strong>不確定</strong></td><td>—</td><td>需設計師確認</td></tr><tr><td>Loading</td><td><strong>not evidenced</strong></td><td>—</td><td>—</td></tr><tr><td>Error</td><td><strong>not evidenced</strong></td><td>—</td><td>—</td></tr></tbody></table></div>
+<h2 id="doc-interaction-states-md-motion">Motion</h2>
+<p>首頁快問快答的 IP 輪播（左右裁切）暗示橫向滑動／輪播；<strong>無動態證據</strong>，不建立 motion token。</p>
+    </section>
+<section class="panel" id="doc-page-composition-rules-md">
+      <span class="source">PAGE_COMPOSITION_RULES.md</span>
+      <h1 id="doc-page-composition-rules-md-page-composition-rules">Page Composition Rules</h1>
+<p>Document how pages should be assembled from foundations and components.</p>
+<h2 id="doc-page-composition-rules-md-viewport-and-app-shell">Viewport And App Shell</h2>
+<ul><li>桌面畫布 1440；內容寬 1140，左右各 150px（E7）。</li><li>頂部固定為 site-header（高 60），底部為 site-footer（含金融免責聲明）。</li><li>手機／App 版型：<strong>本輪未分析 App 截圖（S7），不寫規則</strong>。</li></ul>
+<h2 id="doc-page-composition-rules-md-layout-rhythm">Layout Rhythm</h2>
+<ul><li>頁面由「全幅色帶」垂直堆疊：hero（background）→ 區塊帶（surface-band）→ 內容（background）→ 頁尾（surface-band），色帶交替以建立節奏（E1）。</li><li>區塊標題 28px 置於內容寬左緣，其下為一行灰藍說明句，再接卡片。</li></ul>
+<h2 id="doc-page-composition-rules-md-section-rules">Section Rules</h2>
+<ul><li>首頁順序：快問快答 hero → 本週主題 → 今日精選基金 → 今日精選文章 → 依基金公司找基金 → 頁尾（S1）。</li><li>分類頁順序：麵包屑 → badge＋H1＋副標＋適合對象面板（hero）→ 基金卡片三欄格線 → 相關公司／系列 → 頁尾（S3–S5）。</li></ul>
+<h2 id="doc-page-composition-rules-md-typographic-composition-rules">Typographic Composition Rules</h2>
+<p>Document how recurring text lockups are placed within pages, graphics, cards, editorial surfaces, or marketing compositions. Include alignment, width, rhythm, relationship to media, and responsive wrapping.</p>
+<h2 id="doc-page-composition-rules-md-lists-and-rows">Lists And Rows</h2>
+<h2 id="doc-page-composition-rules-md-cards-and-surfaces">Cards And Surfaces</h2>
+<ul><li>卡片皆為單層（不巢狀）、圓角約 12px、淡陰影；同列卡片等高。</li><li>白色（warm-100）僅用於輸入框、公司卡片、chip 等「可互動／高亮」層。</li></ul>
+<h2 id="doc-page-composition-rules-md-navigation-regions">Navigation Regions</h2>
+<ul><li>全站共用單一 site-header；頁尾含「開始」「常用分類」「依基金公司」三欄連結。</li></ul>
+<h2 id="doc-page-composition-rules-md-responsive-behavior">Responsive Behavior</h2>
+<ul><li>稿中僅有 1440 桌面版；窄版斷點與行為 <strong>not evidenced</strong>，待設計師提供。</li></ul>
+<h2 id="doc-page-composition-rules-md-composition-patterns">Composition Patterns</h2>
+<div class="table-wrap"><table><thead><tr><th>Pattern</th><th>Evidence</th><th>Layout rule</th><th>Components</th><th>Tokens</th></tr></thead><tbody><tr><td>分類頁骨架</td><td>E5</td><td>breadcrumb → hero（badge/H1/副標/適合面板）→ 3 欄卡片 → 相關資訊</td><td>category-hero、fund-card</td><td>category-*</td></tr><tr><td>首頁區塊</td><td>E6</td><td>標題＋說明句＋卡片格線；4 欄文章、3 欄基金、4 欄公司</td><td>fund-card、article-card、fund-company-card</td><td>gap-grid</td></tr></tbody></table></div>
+    </section>
+<section class="panel" id="doc-anti-ai-style-rules-md">
+      <span class="source">ANTI_AI_STYLE_RULES.md</span>
+      <h1 id="doc-anti-ai-style-rules-md-anti-ai-style-rules">Anti-AI Style Rules</h1>
+<p>Use these project-specific constraints before recommending or implementing UI.</p>
+<h2 id="doc-anti-ai-style-rules-md-do-not-add-unless-evidenced">Do Not Add Unless Evidenced</h2>
+<ul><li>Background gradients</li><li>Glow blobs, bokeh orbs, abstract waves</li><li>Glassmorphism</li><li>Generic SaaS hero sections</li><li>Decorative illustration panels</li><li>Outlined card stacks</li><li>Row-as-card treatment</li><li>Extra whitespace beyond observed density</li><li>Extra radius, shadow, blur, or saturation</li><li>Generic heading/subheading stacks replacing evidenced typographic lockups</li></ul>
+<h2 id="doc-anti-ai-style-rules-md-project-specific-constraints">Project-Specific Constraints</h2>
+<ul><li><strong>不要</strong>用暗色科幻、霓虹、發光的財經圖像擴張風格（E9）；它與品牌個性「親切、不冷冰冰」衝突，現況僅作為待決定項目。</li><li><strong>不要</strong>使用財神／福神等帶賭博暗示的 IP 造型（E10、E13）。</li><li><strong>不要</strong>用紅綠色塊暗示報酬或排名；風險等級 RR 以中性 chip 呈現（原則 5）。</li><li><strong>不要</strong>新增第 3 種「主按鈕色」；現況金色 #C8901F 與琥珀 #F5A525 並存，已屬不一致（E3）。</li><li><strong>不要</strong>為分類頁新增獨立版型，只替換 <code>category-*</code> 色。</li><li><strong>不要</strong>加入漸層玻璃、模糊光球等裝飾；稿中唯一的漸層是分類頁 hero 的淡色底漸層（E5）。</li><li><strong>不要</strong>複製導覽項換行與卡片空圖佔位等稿中瑕疵（E12、S4/S5）。</li></ul>
+    </section>
+<section class="panel" id="doc-components-fund-company-card-md">
+      <span class="source">components/fund-company-card.md</span>
+      <h1 id="doc-components-fund-company-card-md-fund-company-card">fund-company-card（基金公司卡片）</h1>
+<h2 id="doc-components-fund-company-card-md-purpose">Purpose</h2>
+<p>讓使用者從投信公司切入找基金：顯示公司簡稱、法人全名、基金檔數與系列數，點擊進入該公司頁。</p>
+<h2 id="doc-components-fund-company-card-md-evidence">Evidence</h2>
+<div class="table-wrap"><table><thead><tr><th>Evidence ID</th><th>Source</th><th>Region</th><th>Notes</th></tr></thead><tbody><tr><td>E11</td><td>S2</td><td>基金公司總覽 3 欄卡片（x=150–1290, y=449–1452）</td><td>頭圖＋文字區；卡片寬約 365、欄距 22、高約 320</td></tr><tr><td>E11</td><td>S1</td><td>首頁「依基金公司找基金」4 欄精簡卡</td><td>無頭圖，僅文字（精簡版，待決定是否為 variant）</td></tr></tbody></table></div>
+<h2 id="doc-components-fund-company-card-md-component-fingerprint">Component Fingerprint</h2>
+<div class="table-wrap"><table><thead><tr><th>Dimension</th><th>Description</th></tr></thead><tbody><tr><td>Purpose / behavior / composition role</td><td>內容入口卡片（導向公司頁）</td></tr><tr><td>Anatomy</td><td>頭圖（上，約 365×182）／公司簡稱（粗體）／法人全名（灰藍小字）／統計（金色「N 檔基金・M 個系列」）</td></tr><tr><td>Variants / states / modes</td><td>full（有頭圖，3 欄）／compact（無頭圖，4 欄，待 Similarity Review 決定）</td></tr><tr><td>Token contract summary</td><td>surface-bright、corner-md、on-background、text-tertiary、text-link</td></tr><tr><td>Layout / density</td><td>白底、圓角約 12px、文字區左右內距約 24px</td></tr><tr><td>Visual reference</td><td><code>../assets/component-review/fund-company-card-full-overview.png</code>、<code>../assets/component-review/fund-company-card-compact-home.png</code></td></tr><tr><td>Native platform mapping</td><td>not applicable</td></tr><tr><td>Similar components reviewed</td><td>fund-card（結構相近：頭圖＋文字，但資訊不同） → 見 Inventory Similarity Review</td></tr></tbody></table></div>
+<h2 id="doc-components-fund-company-card-md-anatomy">Anatomy</h2>
+<ol><li>Media：深藍黑底財經插圖（目前為 AI 風格圖，待圖像風格決策）</li><li>Name：18px 粗體，深藍黑</li><li>Legal name：14px，灰藍</li><li>Stats：14px，金色，以「・」分隔</li></ol>
+<h2 id="doc-components-fund-company-card-md-variants">Variants</h2>
+<ul><li><code>full</code>：總覽頁（S2）</li><li><code>compact</code>：首頁（S1）— <strong>blocked pending developer decision</strong></li></ul>
+<h2 id="doc-components-fund-company-card-md-states">States</h2>
+<div class="table-wrap"><table><thead><tr><th>State</th><th>說明</th></tr></thead><tbody><tr><td>Default</td><td>如稿</td></tr><tr><td>Hover / pressed / focus-visible</td><td>稿中未見（not evidenced）</td></tr><tr><td>Disabled / loading / error</td><td>not applicable（目前無證據）</td></tr></tbody></table></div>
+<h2 id="doc-components-fund-company-card-md-token-contract">Token Contract</h2>
+<div class="table-wrap"><table><thead><tr><th>Component token</th><th>Maps to system token</th><th>Purpose</th><th>State / mode</th></tr></thead><tbody><tr><td><code>--md-comp-fund-company-card-container-color</code></td><td><code>--md-sys-color-surface-bright</code></td><td>卡片底</td><td>default</td></tr><tr><td><code>--md-comp-fund-company-card-corner</code></td><td><code>--md-sys-shape-corner-md</code></td><td>圓角</td><td>default</td></tr><tr><td><code>--md-comp-fund-company-card-name-text-color</code></td><td><code>--md-sys-color-on-background</code></td><td>名稱</td><td>default</td></tr><tr><td><code>--md-comp-fund-company-card-name-text-size</code></td><td><code>--md-sys-typescale-title-small-size</code></td><td>名稱字級</td><td>default</td></tr><tr><td><code>--md-comp-fund-company-card-legal-name-text-color</code></td><td><code>--md-sys-color-text-tertiary</code></td><td>法人全名</td><td>default</td></tr><tr><td><code>--md-comp-fund-company-card-legal-name-text-size</code></td><td><code>--md-sys-typescale-label-size</code></td><td>法人全名字級</td><td>default</td></tr><tr><td><code>--md-comp-fund-company-card-stats-text-color</code></td><td><code>--md-sys-color-text-link</code></td><td>統計</td><td>default</td></tr><tr><td><code>--md-comp-fund-company-card-stats-text-size</code></td><td><code>--md-sys-typescale-label-size</code></td><td>統計字級</td><td>default</td></tr><tr><td><code>--md-comp-fund-company-card-grid-gap</code></td><td><code>--md-sys-spacing-gap-grid</code></td><td>欄距 22</td><td>default</td></tr></tbody></table></div>
+<h2 id="doc-components-fund-company-card-md-layout-rules">Layout Rules</h2>
+<ul><li>總覽頁 3 欄，內容寬 1140，欄距 22；最後一列靠左，不置中。</li><li>文字順序固定：名稱 → 法人全名 → 統計；法人全名可能等於簡稱（如「兆豐投信」），此時照常顯示。</li></ul>
+<h2 id="doc-components-fund-company-card-md-content-rules">Content Rules</h2>
+<p>統計格式「85 檔基金・16 個系列」；數字不加粗過度強調，維持金色。</p>
+<h2 id="doc-components-fund-company-card-md-accessibility-rules">Accessibility Rules</h2>
+<ul><li>金色統計文字（#8A5A0F 系列）在米白底對比需於實作時驗證 ≥ 4.5:1。</li><li>整張卡片作為單一連結，頭圖 alt 為空（裝飾性）。</li></ul>
+<h2 id="doc-components-fund-company-card-md-do-don-t">Do / Don't</h2>
+<ul><li>Do：同頁所有公司卡片使用同一種頭圖比例。</li><li>Don't：不要在卡片內加入第二個按鈕；不要使用暗示排名的標示（品牌個性：中立、不推銷）。</li></ul>
+<h2 id="doc-components-fund-company-card-md-implementation-notes">Implementation Notes</h2>
+<p>頭圖圖片風格尚未定案，spec 只規範比例與位置，不規範圖片內容。</p>
+    </section>
+<section class="panel" id="doc-components-site-header-md">
+      <span class="source">components/site-header.md</span>
+      <h1 id="doc-components-site-header-md-site-header">site-header（網站導覽列）</h1>
+<h2 id="doc-components-site-header-md-purpose">Purpose</h2>
+<p>全站頂部導覽：品牌 logo、8 個主要入口、基金搜尋。所有頁面共用（首頁、分類頁、公司頁皆同）。</p>
+<h2 id="doc-components-site-header-md-evidence">Evidence</h2>
+<div class="table-wrap"><table><thead><tr><th>Evidence ID</th><th>Source</th><th>Region</th><th>Notes</th></tr></thead><tbody><tr><td>E12</td><td>S1,S2,S3</td><td>頂部 0–68px</td><td>logo 左、導覽居中、搜尋右；底部邊線 #E7DCC6</td></tr><tr><td>E1</td><td>S1,S2,S3</td><td>背景</td><td>背景 #FCF8F1（surface）</td></tr></tbody></table></div>
+<h2 id="doc-components-site-header-md-component-fingerprint">Component Fingerprint</h2>
+<div class="table-wrap"><table><thead><tr><th>Dimension</th><th>Description</th></tr></thead><tbody><tr><td>Purpose / behavior / composition role</td><td>全域導覽＋搜尋入口</td></tr><tr><td>Anatomy</td><td>logo（金色圓角方塊＋白色 A＋「基金A寶」粗體）／導覽項×8（首頁、新手入門、追求成長、穩健配息、多元配置、海外佈局、基金公司、基金學堂）／搜尋框</td></tr><tr><td>Variants / states / modes</td><td>桌面 1440 版本；手機版未見於稿（App 截圖未分析）</td></tr><tr><td>Token contract summary</td><td>surface、outline、on-background、surface-bright、corner-full、header-height</td></tr><tr><td>Layout / density</td><td>高 60px；搜尋框 256×40；導覽項欄寬過窄造成雙行換行</td></tr><tr><td>Visual reference</td><td><code>../assets/component-review/site-header-desktop.png</code></td></tr><tr><td>Native platform mapping</td><td>not applicable（App 導覽另行萃取）</td></tr><tr><td>Similar components reviewed</td><td>無（唯一導覽列）</td></tr></tbody></table></div>
+<h2 id="doc-components-site-header-md-anatomy">Anatomy</h2>
+<ol><li>Brand lockup：logo 圖示 ＋ 品牌字</li><li>Primary nav：8 個文字連結，14px、粗體、深藍黑</li><li>Search field：全圓角、白底、細線圖示＋佔位字「搜尋基金」（灰藍）</li></ol>
+<h2 id="doc-components-site-header-md-variants">Variants</h2>
+<ul><li>桌面（1440）：如稿。</li><li>窄版／手機：<strong>稿中未見</strong>，不推測。</li></ul>
+<h2 id="doc-components-site-header-md-states">States</h2>
+<div class="table-wrap"><table><thead><tr><th>State</th><th>說明</th></tr></thead><tbody><tr><td>Default</td><td>如稿</td></tr><tr><td>Hover / pressed / focus-visible</td><td>稿中未見，標示 not evidenced，待設計師補</td></tr><tr><td>Active（目前頁）</td><td>稿中未見明顯強調，待確認</td></tr><tr><td>Disabled / loading / error</td><td>not applicable</td></tr></tbody></table></div>
+<h2 id="doc-components-site-header-md-token-contract">Token Contract</h2>
+<div class="table-wrap"><table><thead><tr><th>Component token</th><th>Maps to system token</th><th>Purpose</th><th>State / mode</th></tr></thead><tbody><tr><td><code>--md-comp-site-header-container-color</code></td><td><code>--md-sys-color-surface</code></td><td>背景</td><td>default</td></tr><tr><td><code>--md-comp-site-header-bottom-border-color</code></td><td><code>--md-sys-color-outline</code></td><td>底線</td><td>default</td></tr><tr><td><code>--md-comp-site-header-height</code></td><td><code>--md-sys-spacing-region-header-height</code></td><td>高度 60</td><td>default</td></tr><tr><td><code>--md-comp-site-header-nav-text-color</code></td><td><code>--md-sys-color-on-background</code></td><td>導覽文字</td><td>default</td></tr><tr><td><code>--md-comp-site-header-nav-text-size</code></td><td><code>--md-sys-typescale-label-size</code></td><td>導覽文字 14px</td><td>default</td></tr><tr><td><code>--md-comp-site-header-search-container-color</code></td><td><code>--md-sys-color-surface-bright</code></td><td>搜尋框底</td><td>default</td></tr><tr><td><code>--md-comp-site-header-search-placeholder-color</code></td><td><code>--md-sys-color-on-surface-bright</code></td><td>佔位字</td><td>default</td></tr><tr><td><code>--md-comp-site-header-search-corner</code></td><td><code>--md-sys-shape-corner-full</code></td><td>全圓角</td><td>default</td></tr></tbody></table></div>
+<h2 id="doc-components-site-header-md-layout-rules">Layout Rules</h2>
+<ul><li>導覽列左右內距約 40px；logo 靠左、搜尋框靠右（距右約 40px）。</li><li>導覽項需有足夠寬度顯示單行，<strong>稿中「首／頁」「新手入／門」被換行為已知瑕疵，不得複製</strong>。</li></ul>
+<h2 id="doc-components-site-header-md-content-rules">Content Rules</h2>
+<p>導覽項名稱簡短（2–4 字）；搜尋佔位字用動詞＋名詞（「搜尋基金」）。</p>
+<h2 id="doc-components-site-header-md-accessibility-rules">Accessibility Rules</h2>
+<ul><li>佔位字 #B8C2C8 在白底對比約 1.9:1，低於 WCAG AA（僅作佔位提示，輸入文字需另用 <code>on-surface</code> 色）。</li><li>搜尋框需有可見標籤或 aria-label。</li></ul>
+<h2 id="doc-components-site-header-md-do-don-t">Do / Don't</h2>
+<ul><li>Do：導覽單行、與頁面其餘文字同字體。</li><li>Don't：不要讓導覽文字換行；不要把搜尋框改成非全圓角（與 pill/chip 語言一致）。</li></ul>
+<h2 id="doc-components-site-header-md-implementation-notes">Implementation Notes</h2>
+<p>僅依視覺量測；實際 padding、字重數值待設計師確認。</p>
+    </section>
+    </main>
+  </div>
+  <script>
+(() => {
+  const STORAGE_KEY = "design-system-docs-lang";
+  const DEFAULT_LOCALE = "zh-Hant";
+  const copy = {"zh-Hant":{"htmlLang":"zh-Hant","pageTitle":"設計系統文件","brand":"設計系統","subtitle":"自動產生文件","langSelectorLabel":"語言","navOverview":"總覽","navTokens":"Tokens","navReviewQueue":"審查佇列","navMissingDocuments":"缺少文件","heroTitle":"設計系統文件","heroLead":"此靜態參考文件由 <code>design-system/</code> Markdown 與 <code>tokens/</code> CSS 自訂屬性自動產生。","pillGenerated":"產生時間","pillDocuments":"份文件","pillTokens":"個 tokens","summaryAriaLabel":"文件摘要","statDocuments":"設計系統文件","statTokens":"Token 總數","statTokenRef":"Reference tokens","statTokenSys":"System tokens","statTokenComp":"Component tokens","statMissing":"缺少預期文件","tokenRef":"Reference Tokens","tokenSys":"System Tokens","tokenComp":"Component Tokens","tokenColumnName":"Token","tokenColumnValue":"值","tokenColumnResolved":"解析值","noTokensFound":"找不到 tokens。","missingDocumentsTitle":"缺少文件","missingDocumentsLead":"此套件中找不到以下預期的設計系統文件。","componentPrefix":"元件：","docKickstart":"Kickstart","docSessionState":"Session 狀態","docIntegrationReview":"整併審查","docEvidenceMap":"設計證據對照","docDesignPrinciples":"設計原則","docDesignElements":"設計元素","docTokenArchitecture":"Token 架構","docComponentInventory":"元件盤點","docComponentSpecTemplate":"元件規格範本","docInteractionStates":"互動狀態","docPageComposition":"頁面組成","docAntiAiStyleRules":"Anti-AI 風格規則"},"en":{"htmlLang":"en","pageTitle":"Design System Documentation","brand":"Design System","subtitle":"Generated documentation","langSelectorLabel":"Language","navOverview":"Overview","navTokens":"Tokens","navReviewQueue":"Review Queue","navMissingDocuments":"Missing Documents","heroTitle":"Design System Documentation","heroLead":"This static reference was generated from <code>design-system/</code> Markdown files and <code>tokens/</code> CSS custom properties.","pillGenerated":"Generated","pillDocuments":"documents","pillTokens":"tokens","summaryAriaLabel":"Documentation summary","statDocuments":"Design-system documents","statTokens":"Total tokens","statTokenRef":"Reference tokens","statTokenSys":"System tokens","statTokenComp":"Component tokens","statMissing":"Missing expected docs","tokenRef":"Reference Tokens","tokenSys":"System Tokens","tokenComp":"Component Tokens","tokenColumnName":"Token","tokenColumnValue":"Value","tokenColumnResolved":"Resolved","noTokensFound":"No tokens found.","missingDocumentsTitle":"Missing Documents","missingDocumentsLead":"These expected design-system documents were not found in this package.","componentPrefix":"Component: ","docKickstart":"Kickstart","docSessionState":"Session State","docIntegrationReview":"Integration Review","docEvidenceMap":"Evidence Map","docDesignPrinciples":"Design Principles","docDesignElements":"Design Elements","docTokenArchitecture":"Token Architecture","docComponentInventory":"Component Inventory","docComponentSpecTemplate":"Component Spec Template","docInteractionStates":"Interaction States","docPageComposition":"Page Composition","docAntiAiStyleRules":"Anti-AI Style Rules"},"ja":{"htmlLang":"ja","pageTitle":"デザインシステムドキュメント","brand":"Design System","subtitle":"自動生成ドキュメント","langSelectorLabel":"言語","navOverview":"概要","navTokens":"Tokens","navReviewQueue":"Review Queue","navMissingDocuments":"不足ドキュメント","heroTitle":"デザインシステムドキュメント","heroLead":"この静的リファレンスは <code>design-system/</code> の Markdown と <code>tokens/</code> CSS カスタムプロパティから生成されました。","pillGenerated":"生成","pillDocuments":"件のドキュメント","pillTokens":"件の tokens","summaryAriaLabel":"ドキュメント概要","statDocuments":"デザインシステムドキュメント","statTokens":"Token 総数","statTokenRef":"Reference tokens","statTokenSys":"System tokens","statTokenComp":"Component tokens","statMissing":"不足している想定ドキュメント","tokenRef":"Reference Tokens","tokenSys":"System Tokens","tokenComp":"Component Tokens","tokenColumnName":"Token","tokenColumnValue":"値","tokenColumnResolved":"解決値","noTokensFound":"tokens が見つかりません。","missingDocumentsTitle":"不足ドキュメント","missingDocumentsLead":"このパッケージで次の想定デザインシステムドキュメントが見つかりませんでした。","componentPrefix":"コンポーネント：","docKickstart":"Kickstart","docSessionState":"Session 状態","docIntegrationReview":"Integration Review","docEvidenceMap":"Evidence Map","docDesignPrinciples":"デザイン原則","docDesignElements":"デザイン要素","docTokenArchitecture":"Token アーキテクチャ","docComponentInventory":"コンポーネント一覧","docComponentSpecTemplate":"コンポーネント仕様テンプレート","docInteractionStates":"インタラクション状態","docPageComposition":"ページ構成","docAntiAiStyleRules":"Anti-AI スタイルルール"}};
+
+  const buttons = Array.from(document.querySelectorAll("[data-language-button]"));
+
+  function setLanguage(language) {
+    const messages = copy[language] || copy[DEFAULT_LOCALE];
+    document.documentElement.lang = messages.htmlLang;
+    document.title = messages.pageTitle;
+
+    document.querySelectorAll("[data-i18n]").forEach((node) => {
+      const value = messages[node.dataset.i18n];
+      if (typeof value !== "string") return;
+      if (node.dataset.i18nHtml === "true") {
+        node.innerHTML = value;
+      } else {
+        node.textContent = value;
+      }
+    });
+
+    document.querySelectorAll("[data-i18n-template]").forEach((node) => {
+      if (node.dataset.i18nTemplate === "component" && node.dataset.i18nName) {
+        node.textContent = (messages.componentPrefix || "") + node.dataset.i18nName;
+      }
+    });
+
+    buttons.forEach((button) => {
+      const selected = button.dataset.languageButton === language;
+      button.setAttribute("aria-selected", String(selected));
+    });
+
+    try {
+      localStorage.setItem(STORAGE_KEY, language);
+    } catch (_error) {
+      /* ignore storage failures */
+    }
+  }
+
+  buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+      setLanguage(button.dataset.languageButton);
+    });
+  });
+
+  let initial = DEFAULT_LOCALE;
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored && copy[stored]) initial = stored;
+  } catch (_error) {
+    /* ignore storage failures */
+  }
+  setLanguage(initial);
+})();
+</script>
+</body>
+</html>

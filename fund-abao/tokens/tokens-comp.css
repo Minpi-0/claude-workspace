@@ -1,0 +1,24 @@
+/* Component tokens map component slots to system tokens only. */
+
+:root {
+  /* site-header */
+  --md-comp-site-header-container-color: var(--md-sys-color-surface);
+  --md-comp-site-header-bottom-border-color: var(--md-sys-color-outline);
+  --md-comp-site-header-height: var(--md-sys-spacing-region-header-height);
+  --md-comp-site-header-nav-text-color: var(--md-sys-color-on-background);
+  --md-comp-site-header-nav-text-size: var(--md-sys-typescale-label-size);
+  --md-comp-site-header-search-container-color: var(--md-sys-color-surface-bright);
+  --md-comp-site-header-search-placeholder-color: var(--md-sys-color-on-surface-bright);
+  --md-comp-site-header-search-corner: var(--md-sys-shape-corner-full);
+
+  /* fund-company-card */
+  --md-comp-fund-company-card-container-color: var(--md-sys-color-surface-bright);
+  --md-comp-fund-company-card-corner: var(--md-sys-shape-corner-md);
+  --md-comp-fund-company-card-name-text-color: var(--md-sys-color-on-background);
+  --md-comp-fund-company-card-name-text-size: var(--md-sys-typescale-title-small-size);
+  --md-comp-fund-company-card-legal-name-text-color: var(--md-sys-color-text-tertiary);
+  --md-comp-fund-company-card-legal-name-text-size: var(--md-sys-typescale-label-size);
+  --md-comp-fund-company-card-stats-text-color: var(--md-sys-color-text-link);
+  --md-comp-fund-company-card-stats-text-size: var(--md-sys-typescale-label-size);
+  --md-comp-fund-company-card-grid-gap: var(--md-sys-spacing-gap-grid);
+}

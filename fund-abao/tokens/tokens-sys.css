@@ -1,0 +1,67 @@
+/* System tokens map shared semantic roles to reference tokens only. */
+/* BASELINE STATUS: roles describe the current look; values stay provisional until the brand palette is decided. */
+
+:root {
+  /* Surfaces */
+  --md-sys-color-background: var(--md-ref-color-warm-96);
+  --md-sys-color-on-background: var(--md-ref-color-slate-12);
+  --md-sys-color-surface: var(--md-ref-color-warm-97);
+  --md-sys-color-on-surface: var(--md-ref-color-slate-15);
+  --md-sys-color-surface-band: var(--md-ref-color-warm-95);
+  --md-sys-color-on-surface-band: var(--md-ref-color-slate-12);
+  --md-sys-color-surface-bright: var(--md-ref-color-warm-100);
+  --md-sys-color-on-surface-bright: var(--md-ref-color-slate-75);
+  --md-sys-color-outline: var(--md-ref-color-warm-90);
+
+  /* Text roles */
+  --md-sys-color-text-secondary: var(--md-ref-color-slate-35);
+  --md-sys-color-text-tertiary: var(--md-ref-color-slate-45);
+  --md-sys-color-text-link: var(--md-ref-color-gold-35);
+
+  /* Brand accent */
+  --md-sys-color-primary: var(--md-ref-color-gold-55);
+  --md-sys-color-on-primary: var(--md-ref-color-warm-100);
+  --md-sys-color-secondary: var(--md-ref-color-gold-65);
+  --md-sys-color-on-secondary: var(--md-ref-color-warm-100);
+  --md-sys-color-accent-container: var(--md-ref-color-gold-95);
+  --md-sys-color-on-accent-container: var(--md-ref-color-gold-35);
+  --md-sys-color-inverse: var(--md-ref-color-navy-16);
+  --md-sys-color-on-inverse: var(--md-ref-color-warm-100);
+
+  /* Category themes (page tint + action) */
+  --md-sys-color-category-growth-background: var(--md-ref-color-blue-95);
+  --md-sys-color-on-category-growth-background: var(--md-ref-color-slate-12);
+  --md-sys-color-category-growth-action: var(--md-ref-color-blue-40);
+  --md-sys-color-on-category-growth-action: var(--md-ref-color-warm-100);
+  --md-sys-color-category-steady-background: var(--md-ref-color-green-95);
+  --md-sys-color-on-category-steady-background: var(--md-ref-color-slate-12);
+  --md-sys-color-category-steady-action: var(--md-ref-color-green-40);
+  --md-sys-color-on-category-steady-action: var(--md-ref-color-warm-100);
+
+  /* Typography */
+  --md-sys-typeface-brand: var(--md-ref-typeface-noto-sans-tc);
+  --md-sys-typescale-display-size: var(--md-ref-size-48);
+  --md-sys-typescale-headline-size: var(--md-ref-size-36);
+  --md-sys-typescale-title-large-size: var(--md-ref-size-28);
+  --md-sys-typescale-title-medium-size: var(--md-ref-size-20);
+  --md-sys-typescale-title-small-size: var(--md-ref-size-18);
+  --md-sys-typescale-body-size: var(--md-ref-size-16);
+  --md-sys-typescale-label-size: var(--md-ref-size-14);
+  --md-sys-typescale-metadata-size: var(--md-ref-size-12);
+  --md-sys-typescale-strong-weight: var(--md-ref-weight-700);
+  --md-sys-typescale-heavy-weight: var(--md-ref-weight-900);
+  --md-sys-typescale-regular-weight: var(--md-ref-weight-400);
+
+  /* Layout */
+  --md-sys-layout-viewport-desktop: var(--md-ref-size-1440);
+  --md-sys-layout-content-width: var(--md-ref-size-1140);
+  --md-sys-spacing-gap-sm: var(--md-ref-size-8);
+  --md-sys-spacing-gap-md: var(--md-ref-size-16);
+  --md-sys-spacing-gap-grid: var(--md-ref-size-22);
+  --md-sys-spacing-region-header-height: var(--md-ref-size-60);
+
+  /* Shape */
+  --md-sys-shape-corner-sm: var(--md-ref-radius-8);
+  --md-sys-shape-corner-md: var(--md-ref-radius-12);
+  --md-sys-shape-corner-full: var(--md-ref-radius-999);
+}

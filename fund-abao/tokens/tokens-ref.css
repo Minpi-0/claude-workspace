@@ -1,0 +1,67 @@
+/* Reference tokens hold raw values only. */
+/* BASELINE STATUS: all values are `measured` (pixel sampling of Figma raster captures; the Figma file has no Variables).
+   They describe the CURRENT look, not an approved brand palette. Re-calibrate after the brand palette is decided. */
+
+:root {
+  /* Warm neutral — cream surfaces, 100 lightest -> 0 darkest */
+  --md-ref-color-warm-100: #ffffff;
+  --md-ref-color-warm-98: #fef7e8;
+  --md-ref-color-warm-97: #fcf8f1;
+  --md-ref-color-warm-96: #faf7f1;
+  --md-ref-color-warm-95: #f7f0e2;
+  --md-ref-color-warm-90: #e7dcc6;
+
+  /* Gold / amber — brand accent family */
+  --md-ref-color-gold-98: #fef1cf;
+  --md-ref-color-gold-95: #fdefc4;
+  --md-ref-color-gold-90: #f7e5be;
+  --md-ref-color-gold-65: #f5a525;
+  --md-ref-color-gold-55: #c8901f;
+  --md-ref-color-gold-35: #8a5a0f;
+  --md-ref-color-gold-15: #3d2a0f;
+
+  /* Slate / navy — text and dark surfaces */
+  --md-ref-color-slate-75: #b8c2c8;
+  --md-ref-color-slate-45: #5b6b7e;
+  --md-ref-color-slate-42: #536475;
+  --md-ref-color-slate-35: #4b5563;
+  --md-ref-color-slate-15: #1f2936;
+  --md-ref-color-slate-12: #182330;
+  --md-ref-color-navy-16: #102b42;
+  --md-ref-color-navy-12: #13243a;
+
+  /* Category tints — one family per category page (growth = blue, steady = green) */
+  --md-ref-color-blue-95: #e6f0fb;
+  --md-ref-color-blue-90: #d8e9f8;
+  --md-ref-color-blue-40: #1c64ae;
+  --md-ref-color-green-95: #e1f8f3;
+  --md-ref-color-green-85: #bbede0;
+  --md-ref-color-green-40: #007a64;
+
+  /* Type */
+  --md-ref-typeface-noto-sans-tc: "Noto Sans TC", "Noto Sans CJK TC", sans-serif;
+  --md-ref-weight-400: 400;
+  --md-ref-weight-500: 500;
+  --md-ref-weight-700: 700;
+  --md-ref-weight-900: 900;
+  --md-ref-size-12: 12px;
+  --md-ref-size-14: 14px;
+  --md-ref-size-16: 16px;
+  --md-ref-size-18: 18px;
+  --md-ref-size-20: 20px;
+  --md-ref-size-28: 28px;
+  --md-ref-size-36: 36px;
+  --md-ref-size-48: 48px;
+
+  /* Space and size (px) */
+  --md-ref-size-8: 8px;
+  --md-ref-size-22: 22px;
+  --md-ref-size-60: 60px;
+  --md-ref-size-1140: 1140px;
+  --md-ref-size-1440: 1440px;
+
+  /* Radius */
+  --md-ref-radius-8: 8px;
+  --md-ref-radius-12: 12px;
+  --md-ref-radius-999: 999px;
+}
